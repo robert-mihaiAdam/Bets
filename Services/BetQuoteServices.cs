@@ -1,7 +1,9 @@
 ﻿using Services.Interfaces;
 using DataAccess;
-using Domain;
 using Microsoft.EntityFrameworkCore;
+using Domain.Dto;
+using Domain.Command;
+
 
 namespace Services
 {
@@ -16,7 +18,7 @@ namespace Services
 
         public async Task<BetQuotes> Create(BetQuotes entity)
         {   
-            _dbContext.betQuotes.Add(entity);
+            _dbContext.BetQuotes.Add(entity);
             await _dbContext.SaveChangesAsync();
             return entity;
         }
@@ -28,12 +30,12 @@ namespace Services
 
         public async Task<IEnumerable<BetQuotes>> GetAll()
         {
-            return await _dbContext.betQuotes.ToListAsync();
+            return await _dbContext.BetQuotes.ToListAsync();
         }
 
         public async Task<BetQuotes> GetById(Guid id)
         {
-            return await _dbContext.betQuotes.FindAsync(id);
+            return await _dbContext.BetQuotes.FindAsync(id);
         }
 
         public Task<BetQuotes> Update(Guid id, UpdateBetQuotes entity)

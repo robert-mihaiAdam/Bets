@@ -1,9 +1,9 @@
 ﻿using FluentMigrator;
 
-namespace DataAccess.TableCreator
+namespace DataAccess.Migrations
 {
     [Migration(202407156)]
-    public class BetsCreator : Migration
+    public class Migration_202407156_Add_Bets : Migration
     {
         public override void Down()
         {

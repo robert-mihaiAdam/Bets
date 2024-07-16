@@ -1,8 +1,8 @@
 ﻿using Services.Interfaces;
 using DataAccess;
-using Domain;
 using Microsoft.EntityFrameworkCore;
-using FluentMigrator.Runner.Generators;
+using Domain.Dto;
+using Domain.Command;
 
 namespace Services
 {
@@ -23,7 +23,7 @@ namespace Services
             if (currentQuote == null)
                 return null;
 
-            _dbContext.placedBets.Add(entity);
+            _dbContext.PlacedBets.Add(entity);
             await _dbContext.SaveChangesAsync();
             return entity;
         }
@@ -35,17 +35,17 @@ namespace Services
 
         public async Task<IEnumerable<PlacedBets>> GetAll()
         {
-            return await _dbContext.placedBets.ToListAsync();
+            return await _dbContext.PlacedBets.ToListAsync();
         }
 
         public async Task<PlacedBets?> GetById(Guid id)
         {
-            return await _dbContext.placedBets.FindAsync(id);
+            return await _dbContext.PlacedBets.FindAsync(id);
         }
 
         public async Task<PlacedBets> Update(Guid id, UpdatePlacedBets newEntity)
         {
-            PlacedBets currentBet = await _dbContext.placedBets.FindAsync(id);
+            PlacedBets currentBet = await _dbContext.PlacedBets.FindAsync(id);
             if (currentBet == null)
             {
                 return null;

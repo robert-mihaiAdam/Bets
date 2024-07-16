@@ -1,7 +1,6 @@
 ﻿using Services;
 using DataAccess;
-using Domain;
-using Constants;
+using Domain.Dto;
 
 namespace Seeder
 {
@@ -24,7 +23,7 @@ namespace Seeder
             {
                 BetableEntityServices service = new(context);
                 BetableEntity entity = new BetableEntity { Name = $"Echipa {i * 12}" };
-                context.betableEntity.Add(entity);
+                context.BetableEntity.Add(entity);
             }
             context.SaveChanges();
         }
@@ -35,7 +34,7 @@ namespace Seeder
             Random random = new Random();
             DBContext context = new(Constants.Constants.connection_data);
             BetableEntityServices BetableEntityService = new(context);
-            IEnumerable<BetableEntity> teams = context.betableEntity.ToList();
+            IEnumerable<BetableEntity> teams = context.BetableEntity.ToList();
             int noEntities = teams.Count();
 
             for (long i = 1; i <= noBets; i++)
@@ -57,7 +56,7 @@ namespace Seeder
                     BetableEntityA = firstTeamId,
                     BetableEntityB = secondTeamId
                 };
-                context.bets.Add(newBet);
+                context.Bets.Add(newBet);
             }
             context.SaveChanges();
         }
@@ -65,7 +64,7 @@ namespace Seeder
         private static void populateBetsQuote()
         {
             DBContext context = new(Constants.Constants.connection_data);
-            IEnumerable<Bets> bets = context.bets.ToList();
+            IEnumerable<Bets> bets = context.Bets.ToList();
             long noBets = bets.Count();
             Random random = new Random();
 
@@ -80,7 +79,7 @@ namespace Seeder
                     QuoteB = quoteB,
                     QuoteX = quoteX
                 };
-                context.betQuotes.Add(quote);
+                context.BetQuotes.Add(quote);
             }
             context.SaveChanges();
         }

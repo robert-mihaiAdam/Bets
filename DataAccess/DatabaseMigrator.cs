@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using FluentMigrator.Runner;
-using DataAccess.TableCreator;
+using DataAccess.Migrations;
+using Domain.Dto;
 
 namespace DataAccess
 {
-    public class DBUploader
+    public class DatabaseMigrator
     {
         public static void uploadDB()
         {
@@ -19,8 +20,8 @@ namespace DataAccess
                 .AddFluentMigratorCore()
                 .ConfigureRunner(rb => rb
                     .AddSqlServer()
-                    .WithGlobalConnectionString(Constants.Constants.connection_data)
-                    .ScanIn(typeof(BetableEntityCreator).Assembly).For.Migrations())
+                    .WithGlobalConnectionString(Abstraction.connection_data)
+                    .ScanIn(typeof(Migration_202407154_Add_Entities).Assembly).For.Migrations())
                 .AddLogging(lb => lb.AddFluentMigratorConsole())
                 .BuildServiceProvider(false);
         }

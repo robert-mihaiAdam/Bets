@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Domain
+namespace Domain.Dto
 {
     public class PlacedBets
     {
@@ -12,14 +12,9 @@ namespace Domain
         public DateTime PlacedDate { get; private set; } = DateTime.UtcNow;
 
         [Required]
-        public String Type { get; set; }
+        public string Type { get; set; }
 
         [Required]
         public Guid QuoteId { get; set; }
-    }
-
-    public class UpdatePlacedBets
-    {
-        public String Type { get; set; }
     }
 }

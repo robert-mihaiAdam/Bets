@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Domain
+namespace Domain.Dto
 {
     public class Bets
     {
@@ -17,14 +17,5 @@ namespace Domain
 
         [Required]
         public Guid BetableEntityB { get; set; }
-    }
-
-    public class UpdateBets
-    {
-        [StringLength(100)]
-        public string? Name { get; set; }
-        public long BetableEntityA { get; set; }
-        public long BetableEntityB { get; set; }
-
     }
 }

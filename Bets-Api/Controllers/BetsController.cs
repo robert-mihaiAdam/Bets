@@ -1,21 +1,21 @@
 ﻿using DataAccess;
-using Domain;
+using Domain.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Services;
+using Domain.Command;
 
-namespace Bets_Api.Controllers
+namespace BetsApi.Controllers
 {
     [ApiController]
     [Route("/api/[controller]")]
-    public class betsController : Controller
+    public class BetsController : Controller
     {
         private readonly DBContext _context;
 
-        public betsController(DBContext context)
+        public BetsController(DBContext context)
         {
             _context = context;
         }
-
 
         [HttpPost("place")]
         public async Task<IActionResult> PlaceBet(CreateBetRequest betRequest)

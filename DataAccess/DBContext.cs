@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Domain;
+using Domain.Dto;
 
 namespace DataAccess
 {
     public class DBContext : DbContext
     {
-        public DbSet<Bets> bets { get; set; }
-        public DbSet<BetQuotes> betQuotes { get; set; }
-        public DbSet<BetableEntity> betableEntity { get; set; }
-        public DbSet<PlacedBets> placedBets { get; set; }
+        public DbSet<Bets> Bets { get; set; }
+        public DbSet<BetQuotes> BetQuotes { get; set; }
+        public DbSet<BetableEntity> BetableEntity { get; set; }
+        public DbSet<PlacedBets> PlacedBets { get; set; }
 
         public DBContext(DbContextOptions<DBContext> options) : base(options)
         {

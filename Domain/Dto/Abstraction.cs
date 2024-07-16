@@ -1,6 +1,6 @@
-﻿namespace Constants
+﻿namespace Domain.Dto
 {
-    public static class Constants
+    public static class Abstraction
     {
         public const long noEntities = 10;
         public const long noBets = 20;

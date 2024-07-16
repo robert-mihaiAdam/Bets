@@ -1,7 +1,9 @@
 ﻿using Services.Interfaces;
 using DataAccess;
-using Domain;
 using Microsoft.EntityFrameworkCore;
+using Domain.Dto;
+using Domain.Command;
+
 
 namespace Services
 {
@@ -40,7 +42,7 @@ namespace Services
                 return null;
             }
 
-            _dbContext.bets.Add(entity);
+            _dbContext.Bets.Add(entity);
             await _dbContext.SaveChangesAsync();
             return entity;
         }
@@ -52,12 +54,12 @@ namespace Services
 
         public async Task<IEnumerable<Bets>> GetAll()
         {
-            return await _dbContext.bets.ToListAsync();
+            return await _dbContext.Bets.ToListAsync();
         }
 
         public async Task<Bets> GetById(Guid id)
         {
-            return await _dbContext.bets.FindAsync(id);
+            return await _dbContext.Bets.FindAsync(id);
         }
 
         public Task<Bets> Update(Guid id, UpdateBets entity)
