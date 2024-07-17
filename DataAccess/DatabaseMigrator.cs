@@ -13,6 +13,12 @@ namespace DataAccess
             UpdateDatabase(serviceProvider.CreateScope().ServiceProvider);
         }
 
+        public static void downDB()
+        {
+            IServiceProvider serviceProvider = CreateServices();
+            DowngradeDatabase(serviceProvider.CreateScope().ServiceProvider);
+        }
+
         private static IServiceProvider CreateServices()
         {
             
@@ -30,6 +36,12 @@ namespace DataAccess
         {
             var runner = serviceProvider.GetRequiredService<IMigrationRunner>();
             runner.MigrateUp();
+        }
+
+        private static void DowngradeDatabase(IServiceProvider serviceProvider)
+        {
+            var runner = serviceProvider.GetRequiredService<IMigrationRunner>();
+            runner.MigrateDown(202407157);
         }
     }
 }
