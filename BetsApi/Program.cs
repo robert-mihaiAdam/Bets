@@ -21,6 +21,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-DatabaseMigrator.uploadDB();
+DatabaseMigrator.MigrateDb();
 
 app.Run();

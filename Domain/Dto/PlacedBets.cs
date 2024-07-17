@@ -9,7 +9,7 @@ namespace Domain.Dto
         [Required]
         public Guid UserId { get; set; }
 
-        public DateTime PlacedDate { get; private set; } = DateTime.UtcNow;
+        public DateTime PlacedDate { get; private set; } = TimeProvider.System.GetUtcNow().DateTime;
 
         [Required]
         public string Type { get; set; }
