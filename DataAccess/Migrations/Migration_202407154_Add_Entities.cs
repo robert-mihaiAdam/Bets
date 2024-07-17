@@ -9,7 +9,7 @@ namespace DataAccess.Migrations
         {
             Create.Table("BetableEntity")
                 .WithColumn("Id").AsGuid().PrimaryKey().WithDefault(SystemMethods.NewGuid)
-                .WithColumn("Name").AsString();
+                .WithColumn("Name").AsString(255);
         }
 
         public override void Down()
