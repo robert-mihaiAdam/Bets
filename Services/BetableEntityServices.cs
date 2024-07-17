@@ -6,13 +6,13 @@ using Domain.Command;
 
 namespace Services
 {
-    public class BetableEntityServices : IBetableService<BetableEntity, UpdateBetableEntity>
+    public sealed class BetableEntityServices : IBetableService<BetableEntity, UpdateBetableEntity>
     {
         private readonly DBContext _dbContext;
 
-        public BetableEntityServices() 
+        public BetableEntityServices(DBContext dBContext) 
         {
-            _dbContext = new DBContext(Abstraction.connection_data);
+            this._dbContext = dBContext;
         }
 
         public async Task<BetableEntity> Create(BetableEntity entity)
