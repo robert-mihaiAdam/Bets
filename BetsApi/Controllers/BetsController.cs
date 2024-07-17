@@ -1,5 +1,4 @@
-﻿using DataAccess;
-using Domain.Dto;
+﻿using Domain.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using Domain.Command;
@@ -10,12 +9,20 @@ namespace BetsApi.Controllers
     [Route("/api/[controller]")]
     public class BetsController : Controller
     {
+        BetsServices betService;
+        BetQuoteServices betQuoteService;
+        PlacedBetsService placedBetsService;
+
+        public BetsController()
+        {
+            betService = new();
+            betQuoteService = new();
+            placedBetsService = new();
+        }
 
         [HttpPost("place")]
         public async Task<IActionResult> PlaceBet(CreateBetRequest betRequest)
         {
-            BetsServices betService = new ();
-            BetQuoteServices betQuoteService = new();
             Bets bet = betRequest.Bet;
             BetQuotes quote = betRequest.BetQuote;
             bet = await betService.Create(bet);
@@ -32,9 +39,7 @@ namespace BetsApi.Controllers
         public async Task<IActionResult> PlaceBetQuote(PlacedBets quotes)
         {
             //<TODO> User availability (or jwt token)
-            PlacedBetsService service = new();
-            BetQuoteServices betQuoteService = new();
-            PlacedBets newBet = await service.Create(quotes);
+            PlacedBets newBet = await placedBetsService.Create(quotes);
             if (newBet == null)
                 return BadRequest(ModelState);
 
@@ -48,25 +53,20 @@ namespace BetsApi.Controllers
             {
                 return BadRequest("Body request is empty");
             }
-            PlacedBetsService service = new();
-            await service.Update(id, newPlacedBet);
+            await placedBetsService.Update(id, newPlacedBet);
             return Ok();
         }
 
         [HttpGet()]
         public async Task<IEnumerable<Bets>> ListBets()
         {
-            BetsServices betService = new BetsServices();
-
             return await betService.GetAll();
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> SpecificBet(Guid id)
         {
-            BetsServices betService = new BetsServices();
             Bets currentBet = await betService.GetById(id);
-
             if (currentBet == null)
             {
                 return NotFound("");
