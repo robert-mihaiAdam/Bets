@@ -8,8 +8,12 @@ namespace Services
 {
     public class PlacedBetsService : IBetableService<PlacedBets, UpdatePlacedBets>
     {
-        private readonly DBContext _dbContext = new DBContext(Abstraction.connection_data);
+        private readonly DBContext _dbContext;
 
+        public PlacedBetsService()
+        { 
+            _dbContext = new DBContext(Abstraction.connection_data);
+        }
 
         public async Task<PlacedBets?> Create(PlacedBets entity)
         {

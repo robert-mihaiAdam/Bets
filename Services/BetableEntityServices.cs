@@ -3,13 +3,17 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Domain.Dto;
 using Domain.Command;
-using DataAccess;
 
 namespace Services
 {
     public class BetableEntityServices : IBetableService<BetableEntity, UpdateBetableEntity>
     {
-        private readonly DBContext _dbContext = new DBContext(Abstraction.connection_data);
+        private readonly DBContext _dbContext;
+
+        public BetableEntityServices() 
+        {
+            _dbContext = new DBContext(Abstraction.connection_data);
+        }
 
         public async Task<BetableEntity> Create(BetableEntity entity)
         {
