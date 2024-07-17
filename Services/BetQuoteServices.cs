@@ -7,13 +7,13 @@ using Domain.Command;
 
 namespace Services
 {
-    public class BetQuoteServices : IBetableService<BetQuotes, UpdateBetQuotes>
+    public sealed class BetQuoteServices : IBetableService<BetQuotes, UpdateBetQuotes>
     {
         private readonly DBContext _dbContext;
 
-        public BetQuoteServices()
+        public BetQuoteServices(DBContext dBContext)
         {
-            _dbContext = new DBContext(Abstraction.connection_data);
+            _dbContext = dBContext;
         }
 
         public async Task<BetQuotes> Create(BetQuotes entity)

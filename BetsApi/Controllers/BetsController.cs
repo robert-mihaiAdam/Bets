@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using Domain.Command;
+using DataAccess;
+using Microsoft.EntityFrameworkCore;
+using Services.Interfaces;
 
 namespace BetsApi.Controllers
 {
@@ -9,15 +12,21 @@ namespace BetsApi.Controllers
     [Route("/api/[controller]")]
     public class BetsController : Controller
     {
-        BetsServices betService;
-        BetQuoteServices betQuoteService;
-        PlacedBetsService placedBetsService;
+        private readonly IBetableService<Bets, UpdateBets> betService;
+        private readonly IBetableService<BetQuotes, UpdateBetQuotes> betQuoteService;
+        private readonly IBetableService<PlacedBets, UpdatePlacedBets> placedBetsService;
+        private readonly IBetableService<BetableEntity, UpdateBetableEntity> betableEntityService;
 
-        public BetsController()
+        public BetsController(DBContext context, 
+                              IBetableService<Bets, UpdateBets> betService,
+                              IBetableService<BetableEntity, UpdateBetableEntity> betableEntityService,
+                              IBetableService<BetQuotes, UpdateBetQuotes> betQuoteService,
+                              IBetableService<PlacedBets, UpdatePlacedBets> placedBetsService)
         {
-            betService = new();
-            betQuoteService = new();
-            placedBetsService = new();
+            this.betService = betService;
+            this.betableEntityService = betableEntityService;
+            this.betQuoteService = betQuoteService;
+            this.placedBetsService = placedBetsService;
         }
 
         [HttpPost("place")]

@@ -7,18 +7,18 @@ using Domain.Command;
 
 namespace Services
 {
-    public class BetsServices : IBetableService<Bets, UpdateBets>
+    public sealed class BetsServices : IBetableService<Bets, UpdateBets>
     {
         private readonly DBContext _dbContext;
 
-        public BetsServices() 
+        public BetsServices(DBContext dBContext) 
         {
-            _dbContext = new DBContext(Abstraction.connection_data);
+            this._dbContext = dBContext;
         }
 
         private async Task<bool> validateBetBody(Bets entity)
         {
-            BetableEntityServices service = new();
+            BetableEntityServices service = new(_dbContext);
             BetableEntity home = await service.GetById(entity.BetableEntityA);
             if (home == null)
             {

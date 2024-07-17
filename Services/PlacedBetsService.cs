@@ -6,19 +6,19 @@ using Domain.Command;
 
 namespace Services
 {
-    public class PlacedBetsService : IBetableService<PlacedBets, UpdatePlacedBets>
+    public sealed class PlacedBetsService : IBetableService<PlacedBets, UpdatePlacedBets>
     {
         private readonly DBContext _dbContext;
 
-        public PlacedBetsService()
-        { 
-            _dbContext = new DBContext(Abstraction.connection_data);
+        public PlacedBetsService(DBContext dbContext)
+        {
+            _dbContext = dbContext;
         }
 
         public async Task<PlacedBets?> Create(PlacedBets entity)
         {
             Guid quoteId = entity.QuoteId;
-            BetQuoteServices betQuoteService = new BetQuoteServices();
+            BetQuoteServices betQuoteService = new BetQuoteServices(_dbContext);
             BetQuotes currentQuote = await betQuoteService.GetById(quoteId);
             if (currentQuote == null)
                 return null;
