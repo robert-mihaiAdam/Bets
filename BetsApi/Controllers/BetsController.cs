@@ -10,18 +10,12 @@ namespace BetsApi.Controllers
     [Route("/api/[controller]")]
     public class BetsController : Controller
     {
-        private readonly DBContext _context;
-
-        public BetsController(DBContext context)
-        {
-            _context = context;
-        }
 
         [HttpPost("place")]
         public async Task<IActionResult> PlaceBet(CreateBetRequest betRequest)
         {
-            BetsServices betService = new BetsServices(_context);
-            BetQuoteServices betQuoteService = new(_context);
+            BetsServices betService = new ();
+            BetQuoteServices betQuoteService = new();
             Bets bet = betRequest.Bet;
             BetQuotes quote = betRequest.BetQuote;
             bet = await betService.Create(bet);
@@ -38,8 +32,8 @@ namespace BetsApi.Controllers
         public async Task<IActionResult> PlaceBetQuote(PlacedBets quotes)
         {
             //<TODO> User availability (or jwt token)
-            PlacedBetsService service = new(_context);
-            BetQuoteServices betQuoteService = new(_context);
+            PlacedBetsService service = new();
+            BetQuoteServices betQuoteService = new();
             PlacedBets newBet = await service.Create(quotes);
             if (newBet == null)
                 return BadRequest(ModelState);
@@ -54,7 +48,7 @@ namespace BetsApi.Controllers
             {
                 return BadRequest("Body request is empty");
             }
-            PlacedBetsService service = new(_context);
+            PlacedBetsService service = new();
             await service.Update(id, newPlacedBet);
             return Ok();
         }
@@ -62,7 +56,7 @@ namespace BetsApi.Controllers
         [HttpGet()]
         public async Task<IEnumerable<Bets>> ListBets()
         {
-            BetsServices betService = new BetsServices(_context);
+            BetsServices betService = new BetsServices();
 
             return await betService.GetAll();
         }
@@ -70,7 +64,7 @@ namespace BetsApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> SpecificBet(Guid id)
         {
-            BetsServices betService = new BetsServices(_context);
+            BetsServices betService = new BetsServices();
             Bets currentBet = await betService.GetById(id);
 
             if (currentBet == null)
