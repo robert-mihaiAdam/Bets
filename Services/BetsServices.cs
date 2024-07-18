@@ -7,22 +7,18 @@ using Domain.Command;
 
 namespace Services
 {
-    public sealed class BetsServices : IBetsService<Bets, UpdateBets>
+    public class BetsServices : IBetableService<Bets, UpdateBets>
     {
         private readonly DBContext _dbContext;
-        private readonly TimeProvider _timeProvider;
 
-        public BetsServices(DBContext dBContext, TimeProvider timeProvider)
+        public BetsServices(DBContext dbContext)
         {
-            Console.WriteLine("Test vtm din Bets Service cu time provider");
-            _dbContext = dBContext;
-            _timeProvider = timeProvider;
+            _dbContext = dbContext;
         }
 
         private async Task<bool> validateBetBody(Bets entity)
         {
-            entity.SetTime(_timeProvider);
-            BetableEntityServices service = new(_dbContext, _timeProvider);
+            BetableEntityServices service = new(_dbContext);
             BetableEntity home = await service.GetById(entity.BetableEntityA);
             if (home == null)
             {
@@ -51,6 +47,11 @@ namespace Services
             return entity;
         }
 
+        public async Task<bool> DeleteById(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<Bets>> GetAll()
         {
             return await _dbContext.Bets.ToListAsync();
@@ -59,6 +60,11 @@ namespace Services
         public async Task<Bets> GetById(Guid id)
         {
             return await _dbContext.Bets.FindAsync(id);
+        }
+
+        public Task<Bets> Update(Guid id, UpdateBets entity)
+        {
+            throw new NotImplementedException();
         }
     }
 

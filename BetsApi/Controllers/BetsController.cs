@@ -1,10 +1,8 @@
-﻿using Domain.Dto;
+﻿using DataAccess;
+using Domain.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using Domain.Command;
-using DataAccess;
-using Microsoft.EntityFrameworkCore;
-using Services.Interfaces;
 
 namespace BetsApi.Controllers
 {
@@ -12,26 +10,18 @@ namespace BetsApi.Controllers
     [Route("/api/[controller]")]
     public class BetsController : Controller
     {
-        private readonly IBetsService<Bets, UpdateBets> betService;
-        private readonly IBetQuoteService<BetQuotes, UpdateBetQuotes> betQuoteService;
-        private readonly IPlacedBetsService<PlacedBets, UpdatePlacedBets> placedBetsService;
-        private readonly IBetableEntityService<BetableEntity, UpdateBetableEntity> betableEntityService;
+        private readonly DBContext _context;
 
-        public BetsController(DBContext context,
-                              IBetsService<Bets, UpdateBets> betService,
-                              IBetableEntityService<BetableEntity, UpdateBetableEntity> betableEntityService,
-                              IBetQuoteService<BetQuotes, UpdateBetQuotes> betQuoteService,
-                              IPlacedBetsService<PlacedBets, UpdatePlacedBets> placedBetsService)
+        public BetsController(DBContext context)
         {
-            this.betService = betService;
-            this.betableEntityService = betableEntityService;
-            this.betQuoteService = betQuoteService;
-            this.placedBetsService = placedBetsService;
+            _context = context;
         }
 
         [HttpPost("place")]
         public async Task<IActionResult> PlaceBet(CreateBetRequest betRequest)
         {
+            BetsServices betService = new BetsServices(_context);
+            BetQuoteServices betQuoteService = new(_context);
             Bets bet = betRequest.Bet;
             BetQuotes quote = betRequest.BetQuote;
             bet = await betService.Create(bet);
@@ -48,7 +38,9 @@ namespace BetsApi.Controllers
         public async Task<IActionResult> PlaceBetQuote(PlacedBets quotes)
         {
             //<TODO> User availability (or jwt token)
-            PlacedBets newBet = await placedBetsService.Create(quotes);
+            PlacedBetsService service = new(_context);
+            BetQuoteServices betQuoteService = new(_context);
+            PlacedBets newBet = await service.Create(quotes);
             if (newBet == null)
                 return BadRequest(ModelState);
 
@@ -62,20 +54,25 @@ namespace BetsApi.Controllers
             {
                 return BadRequest("Body request is empty");
             }
-            await placedBetsService.Update(id, newPlacedBet);
+            PlacedBetsService service = new(_context);
+            await service.Update(id, newPlacedBet);
             return Ok();
         }
 
         [HttpGet()]
         public async Task<IEnumerable<Bets>> ListBets()
         {
+            BetsServices betService = new BetsServices(_context);
+
             return await betService.GetAll();
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> SpecificBet(Guid id)
         {
+            BetsServices betService = new BetsServices(_context);
             Bets currentBet = await betService.GetById(id);
+
             if (currentBet == null)
             {
                 return NotFound("");

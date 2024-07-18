@@ -4,16 +4,16 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Dto;
 using Domain.Command;
 
+
 namespace Services
 {
-    public sealed class BetableEntityServices : IBetableEntityService<BetableEntity, UpdateBetableEntity>
+    public class BetableEntityServices : IBetableService<BetableEntity, UpdateBetableEntity>
     {
         private readonly DBContext _dbContext;
-        private readonly TimeProvider _timeProvider;
-        public BetableEntityServices(DBContext dBContext, TimeProvider timeProvider) 
+
+        public BetableEntityServices(DBContext dbContext)
         {
-            _dbContext = dBContext;
-            _timeProvider = timeProvider;
+            _dbContext = dbContext;
         }
 
         public async Task<BetableEntity> Create(BetableEntity entity)
@@ -21,6 +21,11 @@ namespace Services
             _dbContext.BetableEntity.Add(entity);
             await _dbContext.SaveChangesAsync();
             return entity;
+        }
+
+        public Task<bool> DeleteById(Guid id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<BetableEntity>> GetAll()
@@ -31,6 +36,11 @@ namespace Services
         public async Task<BetableEntity> GetById(Guid id)
         {
             return await _dbContext.BetableEntity.FindAsync(id);
+        }
+
+        public Task<BetableEntity> Update(Guid id, UpdateBetableEntity entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }
