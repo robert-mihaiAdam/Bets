@@ -7,7 +7,7 @@ namespace DataAccess
 {
     public class DatabaseMigrator
     {
-        public static void uploadDB()
+        public static void MigrateDb()
         {
             IServiceProvider serviceProvider = CreateServices();
             UpdateDatabase(serviceProvider.CreateScope().ServiceProvider);

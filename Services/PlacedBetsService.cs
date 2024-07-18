@@ -6,19 +6,21 @@ using Domain.Command;
 
 namespace Services
 {
-    public class PlacedBetsService : IBetableService<PlacedBets, UpdatePlacedBets>
+    public sealed class PlacedBetsService : IPlacedBetsService<PlacedBets, UpdatePlacedBets>
     {
         private readonly DBContext _dbContext;
-
-        public PlacedBetsService(DBContext dbContext)
+        private readonly TimeProvider _timeProvider;
+        public PlacedBetsService(DBContext dbContext, TimeProvider timeProvider)
         {
             _dbContext = dbContext;
+            _timeProvider = timeProvider;
         }
 
         public async Task<PlacedBets?> Create(PlacedBets entity)
         {
+            entity.SetTime(_timeProvider);
             Guid quoteId = entity.QuoteId;
-            BetQuoteServices betQuoteService = new BetQuoteServices(_dbContext);
+            BetQuoteServices betQuoteService = new BetQuoteServices(_dbContext, _timeProvider);
             BetQuotes currentQuote = await betQuoteService.GetById(quoteId);
             if (currentQuote == null)
                 return null;
@@ -26,11 +28,6 @@ namespace Services
             _dbContext.PlacedBets.Add(entity);
             await _dbContext.SaveChangesAsync();
             return entity;
-        }
-
-        public Task<bool> DeleteById(Guid id)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<PlacedBets>> GetAll()
@@ -50,7 +47,7 @@ namespace Services
             {
                 return null;
             }
-
+            currentBet.SetTime(_timeProvider);
             currentBet.Type = newEntity.Type;
             await _dbContext.SaveChangesAsync();
             return currentBet;
