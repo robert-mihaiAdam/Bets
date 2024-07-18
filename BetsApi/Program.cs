@@ -11,10 +11,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IBetableService<Bets, UpdateBets>, BetsServices>();
-builder.Services.AddScoped<IBetableService<BetableEntity, UpdateBetableEntity>, BetableEntityServices>();
-builder.Services.AddScoped<IBetableService<BetQuotes, UpdateBetQuotes>, BetQuoteServices>();
-builder.Services.AddScoped<IBetableService<PlacedBets, UpdatePlacedBets>, PlacedBetsService>();
+builder.Services.AddScoped<IBetsService<Bets, UpdateBets>, BetsServices>();
+builder.Services.AddScoped<IBetableEntityService<BetableEntity, UpdateBetableEntity>, BetableEntityServices>();
+builder.Services.AddScoped<IBetQuoteService<BetQuotes, UpdateBetQuotes>, BetQuoteServices>();
+builder.Services.AddScoped<IPlacedBetsService<PlacedBets, UpdatePlacedBets>, PlacedBetsService>();
 
 
 var app = builder.Build();

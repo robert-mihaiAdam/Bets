@@ -12,16 +12,16 @@ namespace BetsApi.Controllers
     [Route("/api/[controller]")]
     public class BetsController : Controller
     {
-        private readonly IBetableService<Bets, UpdateBets> betService;
-        private readonly IBetableService<BetQuotes, UpdateBetQuotes> betQuoteService;
-        private readonly IBetableService<PlacedBets, UpdatePlacedBets> placedBetsService;
-        private readonly IBetableService<BetableEntity, UpdateBetableEntity> betableEntityService;
+        private readonly IBetsService<Bets, UpdateBets> betService;
+        private readonly IBetQuoteService<BetQuotes, UpdateBetQuotes> betQuoteService;
+        private readonly IPlacedBetsService<PlacedBets, UpdatePlacedBets> placedBetsService;
+        private readonly IBetableEntityService<BetableEntity, UpdateBetableEntity> betableEntityService;
 
-        public BetsController(DBContext context, 
-                              IBetableService<Bets, UpdateBets> betService,
-                              IBetableService<BetableEntity, UpdateBetableEntity> betableEntityService,
-                              IBetableService<BetQuotes, UpdateBetQuotes> betQuoteService,
-                              IBetableService<PlacedBets, UpdatePlacedBets> placedBetsService)
+        public BetsController(DBContext context,
+                              IBetsService<Bets, UpdateBets> betService,
+                              IBetableEntityService<BetableEntity, UpdateBetableEntity> betableEntityService,
+                              IBetQuoteService<BetQuotes, UpdateBetQuotes> betQuoteService,
+                              IPlacedBetsService<PlacedBets, UpdatePlacedBets> placedBetsService)
         {
             this.betService = betService;
             this.betableEntityService = betableEntityService;

@@ -6,7 +6,7 @@ using Domain.Command;
 
 namespace Services
 {
-    public sealed class PlacedBetsService : IBetableService<PlacedBets, UpdatePlacedBets>
+    public sealed class PlacedBetsService : IPlacedBetsService<PlacedBets, UpdatePlacedBets>
     {
         private readonly DBContext _dbContext;
 
@@ -26,11 +26,6 @@ namespace Services
             _dbContext.PlacedBets.Add(entity);
             await _dbContext.SaveChangesAsync();
             return entity;
-        }
-
-        public Task<bool> DeleteById(Guid id)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<PlacedBets>> GetAll()

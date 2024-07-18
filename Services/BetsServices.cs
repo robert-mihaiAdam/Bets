@@ -7,7 +7,7 @@ using Domain.Command;
 
 namespace Services
 {
-    public sealed class BetsServices : IBetableService<Bets, UpdateBets>
+    public sealed class BetsServices : IBetsService<Bets, UpdateBets>
     {
         private readonly DBContext _dbContext;
 
@@ -47,11 +47,6 @@ namespace Services
             return entity;
         }
 
-        public async Task<bool> DeleteById(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<Bets>> GetAll()
         {
             return await _dbContext.Bets.ToListAsync();
@@ -60,11 +55,6 @@ namespace Services
         public async Task<Bets> GetById(Guid id)
         {
             return await _dbContext.Bets.FindAsync(id);
-        }
-
-        public Task<Bets> Update(Guid id, UpdateBets entity)
-        {
-            throw new NotImplementedException();
         }
     }
 
