@@ -10,15 +10,19 @@ namespace Services
     public sealed class BetsServices : IBetsService<Bets, UpdateBets>
     {
         private readonly DBContext _dbContext;
+        private readonly TimeProvider _timeProvider;
 
-        public BetsServices(DBContext dBContext) 
+        public BetsServices(DBContext dBContext, TimeProvider timeProvider)
         {
-            this._dbContext = dBContext;
+            Console.WriteLine("Test vtm din Bets Service cu time provider");
+            _dbContext = dBContext;
+            _timeProvider = timeProvider;
         }
 
         private async Task<bool> validateBetBody(Bets entity)
         {
-            BetableEntityServices service = new(_dbContext);
+            entity.SetTime(_timeProvider);
+            BetableEntityServices service = new(_dbContext, _timeProvider);
             BetableEntity home = await service.GetById(entity.BetableEntityA);
             if (home == null)
             {

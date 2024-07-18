@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Domain.Dto
 {
@@ -16,5 +17,10 @@ namespace Domain.Dto
 
         [Required]
         public Guid QuoteId { get; set; }
+
+        public void SetTime(TimeProvider timeProvider)
+        {
+            PlacedDate = timeProvider.GetUtcNow().DateTime;
+        }
     }
 }

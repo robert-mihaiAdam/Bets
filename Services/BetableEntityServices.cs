@@ -9,10 +9,11 @@ namespace Services
     public sealed class BetableEntityServices : IBetableEntityService<BetableEntity, UpdateBetableEntity>
     {
         private readonly DBContext _dbContext;
-
-        public BetableEntityServices(DBContext dBContext) 
+        private readonly TimeProvider _timeProvider;
+        public BetableEntityServices(DBContext dBContext, TimeProvider timeProvider) 
         {
-            this._dbContext = dBContext;
+            _dbContext = dBContext;
+            _timeProvider = timeProvider;
         }
 
         public async Task<BetableEntity> Create(BetableEntity entity)

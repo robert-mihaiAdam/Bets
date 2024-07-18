@@ -9,16 +9,18 @@ namespace Services
     public sealed class PlacedBetsService : IPlacedBetsService<PlacedBets, UpdatePlacedBets>
     {
         private readonly DBContext _dbContext;
-
-        public PlacedBetsService(DBContext dbContext)
+        private readonly TimeProvider _timeProvider;
+        public PlacedBetsService(DBContext dbContext, TimeProvider timeProvider)
         {
             _dbContext = dbContext;
+            _timeProvider = timeProvider;
         }
 
         public async Task<PlacedBets?> Create(PlacedBets entity)
         {
+            entity.SetTime(_timeProvider);
             Guid quoteId = entity.QuoteId;
-            BetQuoteServices betQuoteService = new BetQuoteServices(_dbContext);
+            BetQuoteServices betQuoteService = new BetQuoteServices(_dbContext, _timeProvider);
             BetQuotes currentQuote = await betQuoteService.GetById(quoteId);
             if (currentQuote == null)
                 return null;
@@ -45,7 +47,7 @@ namespace Services
             {
                 return null;
             }
-
+            currentBet.SetTime(_timeProvider);
             currentBet.Type = newEntity.Type;
             await _dbContext.SaveChangesAsync();
             return currentBet;

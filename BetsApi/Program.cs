@@ -15,7 +15,7 @@ builder.Services.AddScoped<IBetsService<Bets, UpdateBets>, BetsServices>();
 builder.Services.AddScoped<IBetableEntityService<BetableEntity, UpdateBetableEntity>, BetableEntityServices>();
 builder.Services.AddScoped<IBetQuoteService<BetQuotes, UpdateBetQuotes>, BetQuoteServices>();
 builder.Services.AddScoped<IPlacedBetsService<PlacedBets, UpdatePlacedBets>, PlacedBetsService>();
-
+builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 
 var app = builder.Build();
 

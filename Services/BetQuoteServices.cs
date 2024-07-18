@@ -10,10 +10,12 @@ namespace Services
     public sealed class BetQuoteServices : IBetQuoteService<BetQuotes, UpdateBetQuotes>
     {
         private readonly DBContext _dbContext;
+        private readonly TimeProvider _timeProvider;
 
-        public BetQuoteServices(DBContext dBContext)
+        public BetQuoteServices(DBContext dBContext, TimeProvider timeProvider)
         {
             _dbContext = dBContext;
+            _timeProvider = timeProvider;
         }
 
         public async Task<BetQuotes> Create(BetQuotes entity)
