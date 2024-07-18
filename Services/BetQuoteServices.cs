@@ -38,6 +38,14 @@ namespace Services
             return await _dbContext.BetQuotes.FindAsync(id);
         }
 
+        public async Task<IEnumerable<BetQuotes>> GetBets(Guid id)
+        {
+            Console.WriteLine(id);
+            return await _dbContext.BetQuotes
+                                    .Where(quote => quote.BetId == id)
+                                    .ToListAsync();
+        }
+
         public Task<BetQuotes> Update(Guid id, UpdateBetQuotes entity)
         {
             throw new NotImplementedException();

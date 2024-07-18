@@ -83,5 +83,11 @@ namespace BetsApi.Controllers
 
             return Ok(currentBet);
         }
+
+        [HttpGet("findBetInQuote/{id}")]
+        public async Task<IEnumerable<BetQuotes>> ListBetEntity(Guid id)
+        {
+            return await ((BetQuoteServices)betQuoteService).GetBets(id);
+        }
     }
 }

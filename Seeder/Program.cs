@@ -8,7 +8,7 @@ namespace Seeder
     {
         public static void Main(string[] args)
         {
-            populateBetableEntity();
+            //populateBetableEntity();
             populateBets();
             populateBetsQuote();
         }
@@ -22,7 +22,7 @@ namespace Seeder
             for (long i = 1; i <= noEntities; i++)
             {
                 BetableEntityServices service = new(context);
-                BetableEntity entity = new BetableEntity { Name = $"Echipa {i * 12}" };
+                BetableEntity entity = new BetableEntity { Name = $"Echipa {i}" };
                 context.BetableEntity.Add(entity);
             }
             context.SaveChanges();
@@ -30,6 +30,7 @@ namespace Seeder
 
         private static void populateBets()
         {
+            Console.WriteLine("Start bets");
             long noBets = Abstraction.noBets;
             Random random = new Random();
             DBContext context = new(Abstraction.connection_data);
@@ -58,11 +59,14 @@ namespace Seeder
                 };
                 context.Bets.Add(newBet);
             }
+            Console.WriteLine("Done adding. Now let's save");
             context.SaveChanges();
+            Console.WriteLine("Done saving");
         }
 
         private static void populateBetsQuote()
         {
+            Console.WriteLine("Start bet quotes");
             DBContext context = new(Abstraction.connection_data);
             IEnumerable<Bets> bets = context.Bets.ToList();
             long noBets = bets.Count();
