@@ -1,27 +1,24 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using FluentMigrator.Runner;
-using DataAccess.Migrations;
-using Domain.Dto;
 
 namespace DataAccess
 {
     public class DatabaseMigrator
     {
-        public static void MigrateDb()
+        public static void MigrateDb(string connectionString)
         {
-            IServiceProvider serviceProvider = CreateServices();
+            IServiceProvider serviceProvider = CreateServices(connectionString);
             UpdateDatabase(serviceProvider.CreateScope().ServiceProvider);
         }
 
-        private static IServiceProvider CreateServices()
+        private static IServiceProvider CreateServices(string connectionString)
         {
-            
             return new ServiceCollection()
                 .AddFluentMigratorCore()
                 .ConfigureRunner(rb => rb
                     .AddSqlServer()
-                    .WithGlobalConnectionString(Abstraction.connection_data)
-                    .ScanIn(typeof(Migration_202407154_Add_Entities).Assembly).For.Migrations())
+                    .WithGlobalConnectionString(connectionString)
+                    .ScanIn(typeof(DatabaseMigrator).Assembly).For.Migrations())
                 .AddLogging(lb => lb.AddFluentMigratorConsole())
                 .BuildServiceProvider(false);
         }

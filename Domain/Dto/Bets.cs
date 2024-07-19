@@ -4,13 +4,13 @@ namespace Domain.Dto
 {
     public class Bets
     {
-        public Guid Id { get; private set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
 
-        public DateTime Date { get; private set; } = TimeProvider.System.GetUtcNow().DateTime;
+        public DateTime Date { get; set; }
 
         [Required]
         public Guid BetableEntityA { get; set; }

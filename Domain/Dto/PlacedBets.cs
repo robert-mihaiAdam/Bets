@@ -4,12 +4,12 @@ namespace Domain.Dto
 {
     public class PlacedBets
     {
-        public Guid Id { get; private set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
 
         [Required]
         public Guid UserId { get; set; }
 
-        public DateTime PlacedDate { get; private set; } = TimeProvider.System.GetUtcNow().DateTime;
+        public DateTime PlacedDate { get; set; }
 
         [Required]
         public string Type { get; set; }
