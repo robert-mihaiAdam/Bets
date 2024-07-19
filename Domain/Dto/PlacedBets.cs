@@ -4,7 +4,7 @@ namespace Domain.Dto
 {
     public class PlacedBets
     {
-        public Guid Id { get; private set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
 
         [Required]
         public Guid UserId { get; set; }
@@ -16,10 +16,5 @@ namespace Domain.Dto
 
         [Required]
         public Guid QuoteId { get; set; }
-
-        public void SetTime(TimeProvider timeProvider)
-        {
-            PlacedDate = timeProvider.GetUtcNow().DateTime;
-        }
     }
 }

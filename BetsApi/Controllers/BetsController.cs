@@ -12,21 +12,18 @@ namespace BetsApi.Controllers
         private readonly IBetsService betService;
         private readonly IBetQuoteService betQuoteService;
         private readonly IPlacedBetsService placedBetsService;
-        private readonly IBetableEntityService betableEntityService;
 
         public BetsController(IBetsService betService,
-                              IBetableEntityService betableEntityService,
                               IBetQuoteService betQuoteService,
                               IPlacedBetsService placedBetsService)
         {
             this.betService = betService;
-            this.betableEntityService = betableEntityService;
             this.betQuoteService = betQuoteService;
             this.placedBetsService = placedBetsService;
         }
 
         [HttpPost("place")]
-        public async Task<IActionResult> PlaceBet(CreateBetRequest betRequest)
+        public async Task<IActionResult> PlaceBetAsync(CreateBetRequest betRequest)
         {
             Bets bet = betRequest.Bet;
             BetQuotes quote = betRequest.BetQuote;
@@ -41,7 +38,7 @@ namespace BetsApi.Controllers
         }
 
         [HttpPost()]
-        public async Task<IActionResult> PlaceBetQuote(PlacedBets quotes)
+        public async Task<IActionResult> PlaceBetQuoteAsync(PlacedBets quotes)
         {
             //<TODO> User availability (or jwt token)
             PlacedBets newBet = await placedBetsService.CreateAsync(quotes);
@@ -52,7 +49,7 @@ namespace BetsApi.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateQuote(Guid id, UpdatePlacedBets newPlacedBet)
+        public async Task<IActionResult> UpdateQuoteAsync(Guid id, UpdatePlacedBets newPlacedBet)
         {
             if (newPlacedBet == null)
             {
@@ -63,13 +60,13 @@ namespace BetsApi.Controllers
         }
 
         [HttpGet()]
-        public async Task<IEnumerable<Bets>> ListBets()
+        public async Task<IEnumerable<Bets>> ListBetsAsync()
         {
             return await betService.GetAllAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> SpecificBet(Guid id)
+        public async Task<IActionResult> SpecificBetAsync(Guid id)
         {
             Bets currentBet = await betService.GetByIdAsync(id);
             if (currentBet == null)

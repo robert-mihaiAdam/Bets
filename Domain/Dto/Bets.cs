@@ -4,7 +4,7 @@ namespace Domain.Dto
 {
     public class Bets
     {
-        public Guid Id { get; private set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(100)]
@@ -17,10 +17,5 @@ namespace Domain.Dto
 
         [Required]
         public Guid BetableEntityB { get; set; }
-
-        public void SetTime(TimeProvider timeProvider)
-        {
-            Date = timeProvider.GetUtcNow().DateTime;
-        }
     }
 }

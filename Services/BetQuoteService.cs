@@ -8,7 +8,6 @@ namespace Services
     public sealed class BetQuoteService : IBetQuoteService
     {
         private readonly DBContext _dbContext;
-        private readonly TimeProvider _timeProvider;
 
         public BetQuoteService(DBContext dBContext)
         {
