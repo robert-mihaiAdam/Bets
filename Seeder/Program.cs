@@ -15,13 +15,14 @@ namespace Seeder
 
         private static void populateBetableEntity()
         {
-            long noEntities = Constants.Constants.noEntities;
+            long noEntities = Abstraction.noEntities;
             List<Task<BetableEntity>> tasks = new();
-            DBContext context = new(Constants.Constants.connection_data);
+            DBContext context = new(Abstraction.connection_data);
 
             for (long i = 1; i <= noEntities; i++)
             {
-                BetableEntityServices service = new(context);
+
+                BetableEntityService service = new(context);
                 BetableEntity entity = new BetableEntity { Name = $"Echipa {i * 12}" };
                 context.BetableEntity.Add(entity);
             }
@@ -30,10 +31,10 @@ namespace Seeder
 
         private static void populateBets()
         {
-            long noBets = Constants.Constants.noBets;
+            long noBets = Abstraction.noBets;
             Random random = new Random();
-            DBContext context = new(Constants.Constants.connection_data);
-            BetableEntityServices BetableEntityService = new(context);
+            DBContext context = new(Abstraction.connection_data);
+            BetableEntityService BetableEntityService = new(context);
             IEnumerable<BetableEntity> teams = context.BetableEntity.ToList();
             int noEntities = teams.Count();
 
@@ -63,7 +64,7 @@ namespace Seeder
 
         private static void populateBetsQuote()
         {
-            DBContext context = new(Constants.Constants.connection_data);
+            DBContext context = new(Abstraction.connection_data);
             IEnumerable<Bets> bets = context.Bets.ToList();
             long noBets = bets.Count();
             Random random = new Random();

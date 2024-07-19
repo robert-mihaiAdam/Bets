@@ -10,12 +10,17 @@ namespace Domain.Dto
         [StringLength(100)]
         public string Name { get; set; }
 
-        public DateTime Date { get; private set; } = TimeProvider.System.GetUtcNow().DateTime;
+        public DateTime Date { get; set; }
 
         [Required]
         public Guid BetableEntityA { get; set; }
 
         [Required]
         public Guid BetableEntityB { get; set; }
+
+        public void SetTime(TimeProvider timeProvider)
+        {
+            Date = timeProvider.GetUtcNow().DateTime;
+        }
     }
 }

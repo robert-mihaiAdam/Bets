@@ -6,51 +6,49 @@ using Domain.Command;
 
 namespace Services
 {
-    public class PlacedBetsService : IBetableService<PlacedBets, UpdatePlacedBets>
+    public sealed class PlacedBetsService : IPlacedBetsService
     {
         private readonly DBContext _dbContext;
+        private readonly TimeProvider _timeProvider;
+        private readonly IBetQuoteService _betQuoteService;
 
-        public PlacedBetsService(DBContext dbContext)
+        public PlacedBetsService(DBContext dbContext, TimeProvider timeProvider, IBetQuoteService betQuoteService)
         {
             _dbContext = dbContext;
+            _timeProvider = timeProvider;
+            _betQuoteService = betQuoteService;
         }
 
-        public async Task<PlacedBets?> Create(PlacedBets entity)
+        public async Task<PlacedBets> CreateAsync(PlacedBets entity)
         {
+            entity.PlacedDate = _timeProvider.GetUtcNow().DateTime;
             Guid quoteId = entity.QuoteId;
-            BetQuoteServices betQuoteService = new BetQuoteServices(_dbContext);
-            BetQuotes currentQuote = await betQuoteService.GetById(quoteId);
+            BetQuotes currentQuote = await _betQuoteService.GetByIdAsync(quoteId);
             if (currentQuote == null)
                 return null;
-
             _dbContext.PlacedBets.Add(entity);
             await _dbContext.SaveChangesAsync();
             return entity;
         }
 
-        public Task<bool> DeleteById(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<PlacedBets>> GetAll()
+        public async Task<IEnumerable<PlacedBets>> GetAllAsync()
         {
             return await _dbContext.PlacedBets.ToListAsync();
         }
 
-        public async Task<PlacedBets?> GetById(Guid id)
+        public async Task<PlacedBets?> GetByIdAsync(Guid id)
         {
             return await _dbContext.PlacedBets.FindAsync(id);
         }
 
-        public async Task<PlacedBets> Update(Guid id, UpdatePlacedBets newEntity)
+        public async Task<PlacedBets> UpdateAsync(Guid id, UpdatePlacedBets newEntity)
         {
             PlacedBets currentBet = await _dbContext.PlacedBets.FindAsync(id);
             if (currentBet == null)
             {
                 return null;
             }
-
+            currentBet.PlacedDate = _timeProvider.GetUtcNow().DateTime;
             currentBet.Type = newEntity.Type;
             await _dbContext.SaveChangesAsync();
             return currentBet;
