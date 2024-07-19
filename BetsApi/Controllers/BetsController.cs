@@ -1,7 +1,6 @@
 ﻿using Domain.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Command;
-using DataAccess;
 using Services.Interfaces;
 
 namespace BetsApi.Controllers

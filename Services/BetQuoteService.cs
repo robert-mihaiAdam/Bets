@@ -13,7 +13,6 @@ namespace Services
         public BetQuoteService(DBContext dBContext)
         {
             _dbContext = dBContext;
-            _timeProvider = timeProvider;
         }
 
         public async Task<BetQuotes> CreateAsync(BetQuotes entity)
