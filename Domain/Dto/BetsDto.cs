@@ -2,15 +2,11 @@
 
 namespace Domain.Dto
 {
-    public class Bets
-    {
-        public Guid Id { get; set; }
-
+    public class BetsDto
+    { 
         [Required]
-        [StringLength(100)]
+        [StringLength(255)]
         public string Name { get; set; }
-
-        public DateTime Date { get; set; }
 
         [Required]
         public Guid BetableEntityA { get; set; }

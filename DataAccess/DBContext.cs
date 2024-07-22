@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Domain.Dto;
+using Domain.Entities;
 
 namespace DataAccess
 {
@@ -13,7 +13,7 @@ namespace DataAccess
         public DBContext(DbContextOptions<DBContext> options) : base(options)
         {
         }
-      
+
         public DBContext(string connectionString): base(GetOptions(connectionString))
         {
         

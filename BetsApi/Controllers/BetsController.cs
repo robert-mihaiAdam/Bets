@@ -1,7 +1,9 @@
-﻿using Domain.Dto;
+﻿using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Command;
 using Services.Interfaces;
+using AutoMapper;
+
 
 namespace BetsApi.Controllers
 {
@@ -12,14 +14,18 @@ namespace BetsApi.Controllers
         private readonly IBetsService betService;
         private readonly IBetQuoteService betQuoteService;
         private readonly IPlacedBetsService placedBetsService;
+        private readonly IMapper mapper;
 
         public BetsController(IBetsService betService,
                               IBetQuoteService betQuoteService,
-                              IPlacedBetsService placedBetsService)
+                              IPlacedBetsService placedBetsService,
+                              IMapper mapper)
         {
+            Console.WriteLine("Merge mapper-ul cred");
             this.betService = betService;
             this.betQuoteService = betQuoteService;
             this.placedBetsService = placedBetsService;
+            this.mapper = mapper;
         }
 
         [HttpPost("place")]

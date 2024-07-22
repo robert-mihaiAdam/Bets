@@ -1,6 +1,6 @@
 ﻿using Services;
 using DataAccess;
-using Domain.Dto;
+using Domain.Entities;
 
 namespace Seeder
 {

@@ -1,7 +1,7 @@
 ﻿using Services.Interfaces;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
-using Domain.Dto;
+using Domain.Entities;
 using Domain.Command;
 
 namespace Services
@@ -49,7 +49,7 @@ namespace Services
                 return null;
             }
             currentBet.PlacedDate = _timeProvider.GetUtcNow().DateTime;
-            currentBet.Type = newEntity.Type;
+            //currentBet.Type = newEntity.Type;
             await _dbContext.SaveChangesAsync();
             return currentBet;
         }

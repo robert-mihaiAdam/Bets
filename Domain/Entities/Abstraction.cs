@@ -1,4 +1,4 @@
-﻿namespace Domain.Dto
+﻿namespace Domain.Entities
 {
     public static class Abstraction
     {

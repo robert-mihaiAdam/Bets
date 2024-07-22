@@ -1,7 +1,7 @@
 ﻿using Services.Interfaces;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
-using Domain.Dto;
+using Domain.Entities;
 
 namespace Services
 {

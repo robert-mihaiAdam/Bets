@@ -2,8 +2,8 @@
 
 namespace DataAccess.Migrations
 {
-    [Migration(202407157)]
-    public class Migration_202407157_Add_PlacedBets : Migration
+    [Migration(202407224)]
+    public class Migration_202407224_Add_PlacedBets : Migration
     {
         public override void Up()
         {
@@ -11,7 +11,7 @@ namespace DataAccess.Migrations
             .WithColumn("Id").AsGuid().PrimaryKey().WithDefault(SystemMethods.NewGuid)
             .WithColumn("UserId").AsGuid()
             .WithColumn("PlacedDate").AsDateTime()
-            .WithColumn("Type").AsInt32()
+            .WithColumn("Type").AsString(1).NotNullable()
             .WithColumn("QuoteId").AsGuid();
         }
 

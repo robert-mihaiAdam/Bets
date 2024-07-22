@@ -1,8 +1,8 @@
-﻿namespace Domain.Dto
+﻿namespace Domain.Entities
 {
     public class BetableEntity
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 }
