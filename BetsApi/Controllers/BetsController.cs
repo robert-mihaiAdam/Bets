@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Domain.Command;
 using Services.Interfaces;
 using AutoMapper;
+using Domain.Dto;
 
 
 namespace BetsApi.Controllers
@@ -14,31 +15,27 @@ namespace BetsApi.Controllers
         private readonly IBetsService betService;
         private readonly IBetQuoteService betQuoteService;
         private readonly IPlacedBetsService placedBetsService;
-        private readonly IMapper mapper;
 
         public BetsController(IBetsService betService,
                               IBetQuoteService betQuoteService,
-                              IPlacedBetsService placedBetsService,
-                              IMapper mapper)
+                              IPlacedBetsService placedBetsService)
         {
-            Console.WriteLine("Merge mapper-ul cred");
             this.betService = betService;
             this.betQuoteService = betQuoteService;
             this.placedBetsService = placedBetsService;
-            this.mapper = mapper;
         }
 
         [HttpPost("place")]
         public async Task<IActionResult> PlaceBetAsync(CreateBetRequest betRequest)
         {
-            Bets bet = betRequest.Bet;
-            BetQuotes quote = betRequest.BetQuote;
-            bet = await betService.CreateAsync(bet);
-            if (bet == null)
-                return BadRequest(ModelState);
+            //Bets bet = betRequest.Bet;
+            //BetQuotes quote = betRequest.BetQuote;
+            //bet = await betService.CreateAsync(bet);
+            //if (bet == null)
+            //    return BadRequest(ModelState);
 
-            quote.BetId = bet.Id;
-            await betQuoteService.CreateAsync(quote);
+            //quote.BetId = bet.Id;
+            //await betQuoteService.CreateAsync(quote);
 
             return Ok();
         }

@@ -10,22 +10,13 @@ namespace DataAccess.Migrations
             Create.Table("BetQuotes")
             .WithColumn("Id").AsGuid().PrimaryKey().WithDefault(SystemMethods.NewGuid)
             .WithColumn("BetId").AsGuid().NotNullable()
-            .WithColumn("QuoteA").AsDecimal(5, 2).NotNullable()
-            .WithColumn("QuoteB").AsDecimal(5, 2).NotNullable()
-            .WithColumn("QuoteX").AsDecimal(5, 2).NotNullable();
-
-            Execute.Sql(
-               "ALTER TABLE BetQuotes " +
-               "ADD CONSTRAINT CHK_QUOTE " +
-               "CHECK ((QuoteA >= 1.00 AND QuoteA <= 100.00) " +
-               "AND (QuoteB >= 1.00 AND QuoteB <= 100.00) " +
-               "AND (QuoteX >= 1.00 AND QuoteX <= 100.00))"
-           );
+            .WithColumn("QuoteA").AsDecimal().NotNullable()
+            .WithColumn("QuoteB").AsDecimal().NotNullable()
+            .WithColumn("QuoteX").AsDecimal().NotNullable();
         }
 
         public override void Down()
         {
-            Execute.Sql("ALTER TABLE BetQuotes DROP CONSTRAINT CHK_QUOTE");
             Delete.Table("BetQuotes");
         }
     }

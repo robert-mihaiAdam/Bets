@@ -8,7 +8,7 @@
 
         public DateTime PlacedDate { get; set; }
 
-        public Abstraction.BetsOptions Type { get; set; }
+        public BetOptions Type { get; set; }
 
         public Guid QuoteId { get; set; }
     }

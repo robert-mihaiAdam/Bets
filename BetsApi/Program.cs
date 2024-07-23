@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Services;
 using Services.Interfaces;
 using Domain;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
