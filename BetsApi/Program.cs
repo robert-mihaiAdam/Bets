@@ -10,6 +10,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<DbDatabaseCreation>(options => options.UseSqlServer(connectionString));
 builder.Services.AddDbContext<DBContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IBetableEntityService, BetableEntityService>();
@@ -36,7 +37,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 var serviceScope = app.Services.CreateScope();
-var context = serviceScope.ServiceProvider.GetRequiredService<DBContext>();
+var context = serviceScope.ServiceProvider.GetRequiredService<DbDatabaseCreation>();
 context.Database.EnsureCreated();
 DatabaseMigrator.MigrateDb(connectionString);
 

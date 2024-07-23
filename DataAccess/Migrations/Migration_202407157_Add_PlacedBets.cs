@@ -1,6 +1,6 @@
 ﻿using FluentMigrator;
 
-namespace DataAccess.Migrations.Old
+namespace DataAccess.Migrations
 {
     [Migration(202407157)]
     public class Migration_202407157_Add_PlacedBets : Migration

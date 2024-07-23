@@ -7,14 +7,16 @@ namespace DataAccess.Migrations
     {
         public override void Up()
         {
-            Create.Table("BetableEntity")
-                .WithColumn("Id").AsGuid().PrimaryKey().WithDefault(SystemMethods.NewGuid)
-                .WithColumn("Name").AsString(255).NotNullable();
+            Alter.Table("BetableEntity")
+                 .AlterColumn("Name")
+                 .AsString(255).WithDefaultValue("");
         }
 
         public override void Down()
         {
-            Delete.Table("BetableEntity");
+            Alter.Table("BetableEntity")
+                  .AlterColumn("Name")
+                  .AsString(255);
         }
     }
 }

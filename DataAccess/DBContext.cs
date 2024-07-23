@@ -26,5 +26,19 @@ namespace DataAccess
             return optionsBuilder.Options;
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<BetQuotes>()
+                .Property(quote => quote.QuoteA)
+                .HasColumnType("decimal(5, 2)");
+            modelBuilder.Entity<BetQuotes>()
+                .Property(quote => quote.QuoteB)
+                .HasColumnType("decimal(5, 2)");
+            modelBuilder.Entity<BetQuotes>()
+                .Property(quote => quote.QuoteX)
+                .HasColumnType("decimal(5, 2)");
+        }
+
     }
 }

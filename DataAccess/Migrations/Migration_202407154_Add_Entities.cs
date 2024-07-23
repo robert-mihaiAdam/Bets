@@ -1,6 +1,6 @@
 ﻿using FluentMigrator;
 
-namespace DataAccess.Migrations.Old
+namespace DataAccess.Migrations
 {
     [Migration(202407154)]
     public class Migration_202407154_Add_Entities : Migration

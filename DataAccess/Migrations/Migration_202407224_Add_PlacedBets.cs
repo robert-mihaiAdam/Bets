@@ -7,17 +7,23 @@ namespace DataAccess.Migrations
     {
         public override void Up()
         {
-            Create.Table("PlacedBets")
-            .WithColumn("Id").AsGuid().PrimaryKey().WithDefault(SystemMethods.NewGuid)
-            .WithColumn("UserId").AsGuid().NotNullable()
-            .WithColumn("PlacedDate").AsDateTime()
-            .WithColumn("Type").AsInt32().NotNullable()
-            .WithColumn("QuoteId").AsGuid().NotNullable();
+            Alter.Table("PlacedBets")
+                .AlterColumn("UserId").AsGuid().WithDefaultValue(SystemMethods.NewGuid);
+
+            Alter.Table("PlacedBets")
+                 .AlterColumn("Type").AsInt32().WithDefaultValue(0);;
         }
 
         public override void Down()
         {
-            Delete.Table("PlacedBets");
+            Alter.Table("PlacedBets")
+                 .AlterColumn("UserId").AsGuid();
+
+            Alter.Table("PlacedBets")
+                 .AlterColumn("Type").AsInt32();
+
+            Alter.Table("PlacedBets")
+                 .AlterColumn("QuoteId").AsGuid();
         }
     }
 }

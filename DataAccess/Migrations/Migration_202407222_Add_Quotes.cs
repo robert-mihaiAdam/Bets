@@ -7,17 +7,26 @@ namespace DataAccess.Migrations
     {
         public override void Up()
         {
-            Create.Table("BetQuotes")
-            .WithColumn("Id").AsGuid().PrimaryKey().WithDefault(SystemMethods.NewGuid)
-            .WithColumn("BetId").AsGuid().NotNullable()
-            .WithColumn("QuoteA").AsDecimal().NotNullable()
-            .WithColumn("QuoteB").AsDecimal().NotNullable()
-            .WithColumn("QuoteX").AsDecimal().NotNullable();
+            Alter.Table("BetQuotes")
+                .AlterColumn("QuoteA").AsDecimal(5,2).WithDefaultValue(1.00);
+
+            Alter.Table("BetQuotes")
+                .AlterColumn("QuoteB").AsDecimal(5, 2).WithDefaultValue(1.00);
+
+            Alter.Table("BetQuotes")
+                .AlterColumn("QuoteX").AsDecimal(5, 2).WithDefaultValue(1.00);
         }
 
         public override void Down()
         {
-            Delete.Table("BetQuotes");
+            Alter.Table("BetQuotes")
+                .AlterColumn("QuoteA").AsDecimal();
+
+            Alter.Table("BetQuotes")
+                .AlterColumn("QuoteB").AsDecimal();
+
+            Alter.Table("BetQuotes")
+                .AlterColumn("QuoteX").AsDecimal();
         }
     }
 }
