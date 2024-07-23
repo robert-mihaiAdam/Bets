@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Dto
+namespace Domain.Dto.BetableEntity
 {
     public class BetableEntityDto
     {
 
-        [Required]
-        [StringLength(255)]
+        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 }
