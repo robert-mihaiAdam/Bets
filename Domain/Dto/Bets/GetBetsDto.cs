@@ -1,12 +1,10 @@
-﻿namespace Domain.Entities
+﻿namespace Domain.Dto.Bets
 {
-    public class Bets
+    public class GetBetsDto
     {
         public Guid Id { get; set; }
 
         public string Name { get; set; }
-
-        public DateTime Date { get; set; }
 
         public Guid BetableEntityA { get; set; }
 

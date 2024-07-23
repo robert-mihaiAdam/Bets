@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Dto
+namespace Domain.Dto.Bets
 {
-    public class BetsDto
-    { 
+    public class CreateBetsDto
+    {
         [Required]
         [StringLength(255)]
         public string Name { get; set; }

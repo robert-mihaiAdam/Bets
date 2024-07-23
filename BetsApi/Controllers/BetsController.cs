@@ -25,21 +25,6 @@ namespace BetsApi.Controllers
             this.placedBetsService = placedBetsService;
         }
 
-        [HttpPost("place")]
-        public async Task<IActionResult> PlaceBetAsync(CreateBetRequest betRequest)
-        {
-            //Bets bet = betRequest.Bet;
-            //BetQuotes quote = betRequest.BetQuote;
-            //bet = await betService.CreateAsync(bet);
-            //if (bet == null)
-            //    return BadRequest(ModelState);
-
-            //quote.BetId = bet.Id;
-            //await betQuoteService.CreateAsync(quote);
-
-            return Ok();
-        }
-
         [HttpPost()]
         public async Task<IActionResult> PlaceBetQuoteAsync(PlacedBets quotes)
         {
