@@ -8,7 +8,7 @@ namespace DataAccess.Migrations
         public override void Up()
         {
             Alter.Table("PlacedBets")
-                .AlterColumn("UserId").AsGuid().WithDefaultValue(SystemMethods.NewGuid);
+                .AlterColumn("UserId").AsGuid().WithDefaultValue(Guid.Empty);
 
             Alter.Table("PlacedBets")
                  .AlterColumn("Type").AsInt32().WithDefaultValue(0);;
