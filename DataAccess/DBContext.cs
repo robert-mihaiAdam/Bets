@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Domain.Dto;
+using Domain.Entities;
 
 namespace DataAccess
 {
@@ -13,7 +13,7 @@ namespace DataAccess
         public DBContext(DbContextOptions<DBContext> options) : base(options)
         {
         }
-      
+
         public DBContext(string connectionString): base(GetOptions(connectionString))
         {
         
@@ -24,6 +24,20 @@ namespace DataAccess
             var optionsBuilder = new DbContextOptionsBuilder<DBContext>();
             optionsBuilder.UseSqlServer(connectionString);
             return optionsBuilder.Options;
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<BetQuotes>()
+                .Property(quote => quote.QuoteA)
+                .HasPrecision(5,2);
+            modelBuilder.Entity<BetQuotes>()
+                .Property(quote => quote.QuoteB)
+                .HasPrecision(5, 2);
+            modelBuilder.Entity<BetQuotes>()
+                .Property(quote => quote.QuoteX)
+                .HasPrecision(5, 2);
         }
 
     }

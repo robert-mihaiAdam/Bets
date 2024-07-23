@@ -2,6 +2,6 @@
 {
     public class UpdatePlacedBets
     {
-        public string Type { get; set; }
+        public BetOptions Type { get; set; }
     }
 }

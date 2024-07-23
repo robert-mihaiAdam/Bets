@@ -1,4 +1,4 @@
-﻿using Domain.Dto;
+﻿using Domain.Entities;
 using Domain.Command;
 
 namespace Services.Interfaces

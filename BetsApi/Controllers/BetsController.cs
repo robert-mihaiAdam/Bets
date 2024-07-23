@@ -1,7 +1,10 @@
-﻿using Domain.Dto;
+﻿using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Command;
 using Services.Interfaces;
+using AutoMapper;
+using Domain.Dto;
+
 
 namespace BetsApi.Controllers
 {
@@ -25,14 +28,14 @@ namespace BetsApi.Controllers
         [HttpPost("place")]
         public async Task<IActionResult> PlaceBetAsync(CreateBetRequest betRequest)
         {
-            Bets bet = betRequest.Bet;
-            BetQuotes quote = betRequest.BetQuote;
-            bet = await betService.CreateAsync(bet);
-            if (bet == null)
-                return BadRequest(ModelState);
+            //Bets bet = betRequest.Bet;
+            //BetQuotes quote = betRequest.BetQuote;
+            //bet = await betService.CreateAsync(bet);
+            //if (bet == null)
+            //    return BadRequest(ModelState);
 
-            quote.BetId = bet.Id;
-            await betQuoteService.CreateAsync(quote);
+            //quote.BetId = bet.Id;
+            //await betQuoteService.CreateAsync(quote);
 
             return Ok();
         }

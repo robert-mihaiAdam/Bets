@@ -18,7 +18,7 @@ namespace DataAccess
                 .ConfigureRunner(rb => rb
                     .AddSqlServer()
                     .WithGlobalConnectionString(connectionString)
-                    .ScanIn(typeof(DatabaseMigrator).Assembly).For.Migrations())
+                    .ScanIn(typeof(DatabaseMigrator).Assembly).For.All())
                 .AddLogging(lb => lb.AddFluentMigratorConsole())
                 .BuildServiceProvider(false);
         }

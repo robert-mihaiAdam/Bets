@@ -1,8 +1,10 @@
-﻿namespace Domain.Dto
+﻿using Domain.Entities;
+
+namespace Domain.Dto
 {
     public class CreateBetRequest
     {
-        public Bets Bet { get; set; }
-        public BetQuotes BetQuote { get; set; }
+        public BetsDto Bet { get; set; }
+        public BetQuotesDto BetQuote { get; set; }
     }
 }
