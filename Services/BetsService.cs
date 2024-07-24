@@ -2,6 +2,7 @@
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
+using Domain.Dto.BetableEntity;
 
 namespace Services
 {
@@ -22,13 +23,13 @@ namespace Services
     private async Task<bool> ValidateBetBodyAsync(Bets entity)
         {
             entity.Date = _timeProvider.GetUtcNow().DateTime;
-            BetableEntity home = await _betableEntity.GetByIdAsync(entity.BetableEntityA);
+            BetableEntityDto home = await _betableEntity.GetByIdAsync(entity.BetableEntityA);
             if (home == null)
             {
                 return false;
             }
 
-            BetableEntity away = await _betableEntity.GetByIdAsync(entity.BetableEntityB);
+            BetableEntityDto away = await _betableEntity.GetByIdAsync(entity.BetableEntityB);
             if (away == null)
             {
                 return false;

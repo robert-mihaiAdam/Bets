@@ -1,18 +1,17 @@
-﻿using Domain.Entities;
-using Domain.Dto.BetableEntity;
+﻿using Domain.Dto.BetableEntity;
 
 namespace Services.Interfaces
 {
     public interface IBetableEntityService
     {
-        Task<BetableEntity> CreateAsync(PlaceBetableEntityDto entity);
+        Task<BetableEntityDto> CreateAsync(PlaceBetableEntityDto entity);
 
-        Task<IEnumerable<BetableEntity?>> GetAllAsync();
+        Task<IEnumerable<BetableEntityDto>> GetAllAsync();
 
-        Task<BetableEntity?> GetByIdAsync(Guid id);
+        Task<BetableEntityDto> GetByIdAsync(Guid id);
 
-        Task<BetableEntity?> UpdateEntityByIdAsync(Guid id, UpdateBetableEntityDto entity);
+        Task<BetableEntityDto> UpdateEntityByIdAsync(Guid id, UpdateBetableEntityDto entity);
 
-        Task<BetableEntity?> DeleteByIdAsync(Guid id);
+        Task<bool> DeleteByIdAsync(Guid id);
     }
 }

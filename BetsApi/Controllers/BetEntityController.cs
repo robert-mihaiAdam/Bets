@@ -3,6 +3,8 @@ using Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Dto.BetableEntity;
+using Microsoft.AspNetCore.JsonPatch;
+using System;
 
 namespace BetsApi.Controllers
 {
@@ -23,60 +25,59 @@ namespace BetsApi.Controllers
         [HttpPost("")]
         public async Task<IActionResult> PlaceBetEntityAsync(PlaceBetableEntityDto newEntity)
         {
-            BetableEntity createdEntity = await _betableEntityService.CreateAsync(newEntity);
-            BetableEntityDto createdEntityDto = _mapper.Map<BetableEntityDto>(createdEntity);
+            BetableEntityDto createdEntityDto = await _betableEntityService.CreateAsync(newEntity);
             return Ok(createdEntityDto);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBetEntityByIdAsync(Guid id)
         {
-            BetableEntity? foundEntity = await _betableEntityService.GetByIdAsync(id);
+            BetableEntityDto foundEntity = await _betableEntityService.GetByIdAsync(id);
 
             if (foundEntity == null)
             {
                 return NotFound($"The entity with id: {id} wasn't found");
             }
 
-            BetableEntityDto dtoEntity = _mapper.Map<BetableEntityDto>(foundEntity);
-            return Ok(dtoEntity);
+            return Ok(foundEntity);
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> GetAllBetEntityByIdAsync()
+        public async Task<IActionResult> GetAllBetEntitiesAsync()
         {
-            IEnumerable<BetableEntity?> entities = await _betableEntityService.GetAllAsync();
-            IEnumerable<BetableEntityDto> dtoEntities = _mapper.Map< IEnumerable<BetableEntityDto>>(entities);
+            IEnumerable<BetableEntityDto> dtoEntities = await _betableEntityService.GetAllAsync();
             return Ok(dtoEntities);
         }
 
         [HttpPatch("{id}")]
         public async Task<IActionResult> EditBetEntityByIdAsync(Guid id, UpdateBetableEntityDto newEntity)
         {
-            BetableEntity? updatedEntity = await _betableEntityService.UpdateEntityByIdAsync(id, newEntity);
+            if (newEntity == null)
+            {
+                return BadRequest();
+            }
+            Console.WriteLine("aM AJUNS SI AICI");
+            BetableEntityDto updatedEntity = await _betableEntityService.UpdateEntityByIdAsync(id, newEntity);
             if (updatedEntity == null)
             {
                 return NotFound($"The entity with id: {id} wasn't found");
             }
 
-            BetableEntityDto entityDto = _mapper.Map<BetableEntityDto>(updatedEntity);
-
-            return Ok(entityDto);
+            return Ok(updatedEntity);
         }
 
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteByIdAsync(Guid id)
         {
-            BetableEntity? foundEntity = await _betableEntityService.DeleteByIdAsync(id);
+            bool foundEntity = await _betableEntityService.DeleteByIdAsync(id);
 
-            if (foundEntity == null)
+            if (!foundEntity)
             {
                 return NotFound($"The entity with id: {id} wasn't found");
             }
 
-            BetableEntityDto dtoEntity = _mapper.Map<BetableEntityDto>(foundEntity);
-            return Ok(dtoEntity);
+            return Ok();
         }
     }
 }

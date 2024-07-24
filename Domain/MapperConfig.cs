@@ -12,7 +12,7 @@ namespace Domain
             CreateMap<PlaceBetableEntityDto, BetableEntity>();
             CreateMap<BetableEntity, BetableEntityDto>();
             CreateMap<UpdateBetableEntityDto, BetableEntity>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                     .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             CreateMap<BetQuotes, BetQuotesDto>();
             CreateMap<Bets, BetsDto>();
