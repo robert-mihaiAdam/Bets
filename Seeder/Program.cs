@@ -6,6 +6,10 @@ namespace Seeder
 {
     public class Program
     {
+        private readonly static long noEntities = 20;
+        private readonly static long noBets = 10;
+        private readonly static string connection_data = "Server=localhost;Database=DotNetCourseDatabase;TrustServerCertificate=true;Trusted_Connection=true;";
+
         public static void Main(string[] args)
         {
             populateBetableEntity();
@@ -15,9 +19,8 @@ namespace Seeder
 
         private static void populateBetableEntity()
         {
-            long noEntities = Abstraction.noEntities;
             List<Task<BetableEntity>> tasks = new();
-            DBContext context = new(Abstraction.connection_data);
+            DBContext context = new(connection_data);
 
             for (long i = 1; i <= noEntities; i++)
             {
@@ -31,9 +34,8 @@ namespace Seeder
 
         private static void populateBets()
         {
-            long noBets = Abstraction.noBets;
-            Random random = new Random();
-            DBContext context = new(Abstraction.connection_data);
+            Random random = new();
+            DBContext context = new(connection_data);
             BetableEntityService BetableEntityService = new(context);
             IEnumerable<BetableEntity> teams = context.BetableEntity.ToList();
             int noEntities = teams.Count();
@@ -64,7 +66,7 @@ namespace Seeder
 
         private static void populateBetsQuote()
         {
-            DBContext context = new(Abstraction.connection_data);
+            DBContext context = new(connection_data);
             IEnumerable<Bets> bets = context.Bets.ToList();
             long noBets = bets.Count();
             Random random = new Random();
