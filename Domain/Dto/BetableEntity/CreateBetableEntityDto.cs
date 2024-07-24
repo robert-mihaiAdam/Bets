@@ -2,7 +2,7 @@
 
 namespace Domain.Dto.BetableEntity
 {
-    public class PlaceBetableEntityDto
+    public class CreateBetableEntityDto
     {
         [Required]
         [StringLength(255)]

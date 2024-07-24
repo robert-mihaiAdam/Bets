@@ -3,6 +3,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
 using Domain.Command;
+using Domain.Dto.BetQuote;
 
 namespace Services
 {
@@ -23,7 +24,7 @@ namespace Services
         {
             entity.PlacedDate = _timeProvider.GetUtcNow().DateTime;
             Guid quoteId = entity.QuoteId;
-            BetQuotes currentQuote = await _betQuoteService.GetByIdAsync(quoteId);
+            BetQuoteDto currentQuote = await _betQuoteService.GetByIdAsync(quoteId);
             if (currentQuote == null)
                 return null;
             _dbContext.PlacedBets.Add(entity);

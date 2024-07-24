@@ -18,7 +18,7 @@ namespace Services
             _mapper = mapper;
         }
 
-        public async Task<BetableEntityDto> CreateAsync(PlaceBetableEntityDto entity)
+        public async Task<BetableEntityDto> CreateAsync(CreateBetableEntityDto entity)
         {
             BetableEntity newBetableEntity = _mapper.Map<BetableEntity>(entity);
             _dbContext.BetableEntity.Add(newBetableEntity);

@@ -2,12 +2,9 @@
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
-<<<<<<< HEAD
 using Domain.Dto.BetableEntity;
-=======
 using Domain.Dto.Bets;
 using AutoMapper;
->>>>>>> a42b9c1 (Feature: Implement Create and read routes for BetQuote)
 
 namespace Services
 {
@@ -27,19 +24,12 @@ namespace Services
             _timeProvider = timeProvider;
             _betableEntity = betableEntity;
             _mapper = mapper;
-            
         }
 
-<<<<<<< HEAD
-    private async Task<bool> ValidateBetBodyAsync(Bets entity)
-        {
-            entity.Date = _timeProvider.GetUtcNow().DateTime;
-            BetableEntityDto home = await _betableEntity.GetByIdAsync(entity.BetableEntityA);
-=======
+
         private async Task<bool> ValidateBetBodyAsync(CreateBetsDto entity)
         { 
-            BetableEntity home = await _betableEntity.GetByIdAsync(entity.BetableEntityA);
->>>>>>> a42b9c1 (Feature: Implement Create and read routes for BetQuote)
+            BetableEntityDto home = await _betableEntity.GetByIdAsync(entity.BetableEntityA);
             if (home == null)
             {
                 return false;
@@ -54,30 +44,48 @@ namespace Services
             return true;
         }
 
-        public async Task<Bets> CreateAsync(CreateBetsDto entity)
+        public async Task<BetsDto> CreateAsync(CreateBetsDto entity)
         {
             bool verdict = await ValidateBetBodyAsync(entity);
             if (!verdict)
             {
                 return null;
             }
-
             Bets newBet = _mapper.Map<Bets>(entity);
             newBet.Date = _timeProvider.GetUtcNow().DateTime;
             _dbContext.Bets.Add(newBet);
             await _dbContext.SaveChangesAsync();
-            return newBet;
+            BetsDto newBetDto = _mapper.Map<BetsDto>(newBet);
+            return newBetDto;
         }
 
-        public async Task<IEnumerable<Bets>> GetAllAsync()
+        public async Task<IEnumerable<BetsDto>> GetAllAsync()
         {
-            return await _dbContext.Bets.ToListAsync();
+            IEnumerable<Bets> entities = await _dbContext.Bets.ToListAsync();
+            IEnumerable<BetsDto> entitiesDto = _mapper.Map<IEnumerable<BetsDto>>(entities);
+            return entitiesDto;
         }
 
-        public async Task<Bets> GetByIdAsync(Guid id)
+        public async Task<BetsDto> GetByIdAsync(Guid id)
         {
-            return await _dbContext.Bets.FindAsync(id);
+            Bets entities = await _dbContext.Bets.FindAsync(id);
+            BetsDto entitiesDto = _mapper.Map<BetsDto>(entities);
+            return entitiesDto;
+        }
+
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            BetsDto foundEntity = await GetByIdAsync(id);
+            Bets item = _mapper.Map<Bets>(foundEntity);
+            if (foundEntity == null)
+            {
+                return false;
+            }
+           
+            _dbContext.Bets.Remove(item);
+            await _dbContext.SaveChangesAsync();
+            Console.WriteLine("Crapa pana aici ba?");
+            return true;
         }
     }
-
 }

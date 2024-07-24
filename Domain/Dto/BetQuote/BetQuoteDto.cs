@@ -1,6 +1,6 @@
 ﻿namespace Domain.Dto.BetQuote
 {
-    public class GetBetQuoteDto
+    public class BetQuoteDto
     {
         public Guid Id { get; private set; }
 

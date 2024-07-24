@@ -1,6 +1,6 @@
 ﻿namespace Domain.Dto.Bets
 {
-    public class GetBetsDto
+    public class BetsDto
     {
         public Guid Id { get; set; }
 

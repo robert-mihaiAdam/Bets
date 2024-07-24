@@ -4,7 +4,6 @@ using Domain.Dto.Bets;
 using Domain.Dto.BetRequest;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using Domain.Entities;
 
 namespace BetsApi.Controllers
 {
@@ -28,21 +27,20 @@ namespace BetsApi.Controllers
         {
             CreateBetsDto bet = betRequest.Bet;
             CreateBetQuotesDto quote = betRequest.BetQuote;
-            Bets createdBet = await _betService.CreateAsync(bet);
+            BetsDto createdBet = await _betService.CreateAsync(bet);
+            Console.WriteLine("Pana aici e ok");
             if (createdBet == null)
                 return BadRequest(ModelState);
 
-            BetQuotes createdQuote = _mapper.Map<BetQuotes>(quote);
-            createdQuote.BetId = createdBet.Id;
-            await _betQuoteService.CreateAsync(createdQuote);
-
-            return Ok();
+            BetQuoteDto createQuote = await _betQuoteService.CreateAsync(quote, createdBet.Id);
+            BetRequestDto betRequestDto = new BetRequestDto{bet = createdBet ,betQuote = createQuote};
+            return Ok(betRequestDto);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBetQuoteByIdAsync(Guid id)
         {
-            BetQuotes currentQuote = await _betQuoteService.GetByIdAsync(id);
+            BetQuoteDto currentQuote = await _betQuoteService.GetByIdAsync(id);
             if (currentQuote == null)
             {
                 return NotFound($"Error: Bet quote with id:{id} doesn't exists");
@@ -50,21 +48,44 @@ namespace BetsApi.Controllers
 
             if (currentQuote.BetId == null)
             {
-               return NotFound($"Error: Bet quote doesn't has an bet");
+                return NotFound("Error: Bet quote doesn't has an bet");
             }
 
-            Bets currentBet = await _betService.GetByIdAsync(currentQuote.BetId);
-            GetBetQuoteDto getQuotesDto = _mapper.Map<GetBetQuoteDto>(currentQuote);
-            GetBetsDto getBetsDto = _mapper.Map<GetBetsDto>(currentBet);
-            GetBetRequest betQuoteEntity = new GetBetRequest { bet = getBetsDto, betQuote = getQuotesDto };
+            BetsDto currentBet = await _betService.GetByIdAsync(currentQuote.BetId);
+            BetRequestDto betQuoteEntity = new BetRequestDto { bet = currentBet, betQuote = currentQuote };
             return Ok(betQuoteEntity);
         }
 
-        [HttpGet("all")]
+        [HttpGet("betQuote/all")]
         public async Task<IActionResult> GetAllBetQuotesAsync()
         {
+            IEnumerable<BetQuoteDto> betQuoteEntities = await _betQuoteService.GetAllAsync();
+            return Ok(betQuoteEntities);
+        }
+
+        [HttpGet("bet/all")]
+        public async Task<IActionResult> GetAllBetAsync()
+        {
+            IEnumerable<BetsDto> betsDtosEntities = await _betService.GetAllAsync();
+            return Ok(betsDtosEntities);
+        }
+
+        [HttpGet("fullBets/all")]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            IEnumerable<BetRequestDto> betsDtosEntities = await _betQuoteService.GetAllFullBetsAsync();
+            return Ok(betsDtosEntities);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteByQuoteIdAsync(Guid id)
+        {
+            bool checkRemove = await _betQuoteService.DeleteFullBetAsync(id);
+            if(!checkRemove)
+            {
+                return NotFound($"Bet Quote with id: {id} doesn't exists");
+            }
             return Ok();
         }
-    
     }
 }

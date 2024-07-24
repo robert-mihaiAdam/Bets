@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using AutoMapper;
-using Domain.Entities;
 using Domain.Dto.BetableEntity;
-using Microsoft.AspNetCore.JsonPatch;
-using System;
 
 namespace BetsApi.Controllers
 {
@@ -23,7 +20,7 @@ namespace BetsApi.Controllers
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> PlaceBetEntityAsync(PlaceBetableEntityDto newEntity)
+        public async Task<IActionResult> PlaceBetEntityAsync(CreateBetableEntityDto newEntity)
         {
             BetableEntityDto createdEntityDto = await _betableEntityService.CreateAsync(newEntity);
             return Ok(createdEntityDto);

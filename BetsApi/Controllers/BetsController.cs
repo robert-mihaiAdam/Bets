@@ -2,9 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Domain.Command;
 using Services.Interfaces;
-using AutoMapper;
-using Domain.Dto;
-
 
 namespace BetsApi.Controllers
 {
@@ -45,24 +42,6 @@ namespace BetsApi.Controllers
             }
             await placedBetsService.UpdateAsync(id, newPlacedBet);
             return Ok();
-        }
-
-        [HttpGet()]
-        public async Task<IEnumerable<Bets>> ListBetsAsync()
-        {
-            return await betService.GetAllAsync();
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> SpecificBetAsync(Guid id)
-        {
-            Bets currentBet = await betService.GetByIdAsync(id);
-            if (currentBet == null)
-            {
-                return NotFound("");
-            }
-
-            return Ok(currentBet);
         }
     }
 }

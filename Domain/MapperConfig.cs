@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Domain.Dto;
-<<<<<<< HEAD
 using Domain.Dto.BetableEntity;
-=======
 using Domain.Dto.BetQuote;
+using Domain.Dto.BetRequest;
 using Domain.Dto.Bets;
->>>>>>> a42b9c1 (Feature: Implement Create and read routes for BetQuote)
 using Domain.Entities;
 
 namespace Domain
@@ -14,23 +12,21 @@ namespace Domain
     {
         public MapperConfig()
         {
-            CreateMap<PlaceBetableEntityDto, BetableEntity>();
+            CreateMap<CreateBetableEntityDto, BetableEntity>();
             CreateMap<BetableEntity, BetableEntityDto>();
-<<<<<<< HEAD
             CreateMap<UpdateBetableEntityDto, BetableEntity>()
                      .ForMember(dest => dest.Id, opt => opt.Ignore());
 
-            CreateMap<BetQuotes, BetQuotesDto>();
-            CreateMap<Bets, BetsDto>();
-=======
-
             CreateMap<CreateBetQuotesDto, BetQuotes>();
-            CreateMap<BetQuotes, GetBetQuoteDto>();
+            CreateMap<BetQuotes, BetQuoteDto>();
+            CreateMap<BetQuoteDto, BetQuotes>();
 
             CreateMap<CreateBetsDto, Bets>();
-            CreateMap<Bets, GetBetsDto>();
+            CreateMap<Bets, BetsDto>();
+            CreateMap<BetsDto, Bets>();
 
->>>>>>> a42b9c1 (Feature: Implement Create and read routes for BetQuote)
+            CreateMap<QueryBetRequestDto, BetRequestDto>();
+
             CreateMap<PlacedBets, PlacedBetsDto>();
         } 
     }
