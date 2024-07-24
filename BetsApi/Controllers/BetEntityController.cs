@@ -52,11 +52,6 @@ namespace BetsApi.Controllers
         [HttpPatch("{id}")]
         public async Task<IActionResult> EditBetEntityByIdAsync(Guid id, UpdateBetableEntityDto newEntity)
         {
-            if (newEntity == null)
-            {
-                return BadRequest();
-            }
-            Console.WriteLine("aM AJUNS SI AICI");
             BetableEntityDto updatedEntity = await _betableEntityService.UpdateEntityByIdAsync(id, newEntity);
             if (updatedEntity == null)
             {
