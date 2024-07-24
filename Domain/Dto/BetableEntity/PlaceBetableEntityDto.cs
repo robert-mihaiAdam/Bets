@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Dto
+namespace Domain.Dto.BetableEntity
 {
-    public class BetableEntityDto
+    public class PlaceBetableEntityDto
     {
-
         [Required]
         [StringLength(255)]
         public string Name { get; set; }
