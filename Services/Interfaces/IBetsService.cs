@@ -10,6 +10,8 @@ namespace Services.Interfaces
 
         Task<BetsDto> GetByIdAsync(Guid id);
 
+        Task<BetsDto> UpdateById(Guid id, UpdateBetsDto newEntity);
+
         Task<bool> DeleteAsync(Guid id);
     }
 }

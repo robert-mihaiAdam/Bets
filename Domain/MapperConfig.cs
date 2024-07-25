@@ -19,11 +19,15 @@ namespace Domain
 
             CreateMap<CreateBetQuotesDto, BetQuotes>();
             CreateMap<BetQuotes, BetQuoteDto>();
-            CreateMap<BetQuoteDto, BetQuotes>();
+            CreateMap<UpdateBetQuotesDto, BetQuotes>()
+                    .ForMember(dest => dest.Id, opt => opt.Ignore())
+                    .ForMember(dest => dest.BetId, opt => opt.Ignore());
 
             CreateMap<CreateBetsDto, Bets>();
             CreateMap<Bets, BetsDto>();
-            CreateMap<BetsDto, Bets>();
+            CreateMap<UpdateBetsDto, CreateBetsDto>();
+            CreateMap<UpdateBetsDto, Bets>()
+                    .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             CreateMap<QueryBetRequestDto, BetRequestDto>();
 

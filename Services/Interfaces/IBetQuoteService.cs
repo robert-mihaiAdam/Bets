@@ -13,6 +13,8 @@ namespace Services.Interfaces
 
         Task<IEnumerable<BetRequestDto>> GetAllFullBetsAsync();
 
+        Task<BetQuoteDto> UpdateById(Guid id, UpdateBetQuotesDto newEntity);
+
         Task<bool> DeleteFullBetAsync(Guid id);
     }
 }

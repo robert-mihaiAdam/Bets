@@ -77,6 +77,29 @@ namespace BetsApi.Controllers
             return Ok(betsDtosEntities);
         }
 
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> EditFullBetAsync(Guid id, UpdateBetRequestDto newEntity)
+        {
+            UpdateBetQuotesDto newBetQuote = newEntity.betQuote;
+            UpdateBetsDto newBet = newEntity.bets;
+            BetQuoteDto updatedBetQuote = await _betQuoteService.UpdateById(id, newBetQuote);
+            if (updatedBetQuote == null)
+            {
+                return NotFound($"Bet Quote with id: {id} doesn't exists");
+            }
+
+            Guid betId = updatedBetQuote.BetId;
+            BetsDto updatedBetDto = await _betService.UpdateById(betId, newBet);
+            if (updatedBetDto == null)
+            {
+                return NotFound($"Bet with id: {betId} doesn't exists");
+            }
+
+            BetRequestDto updatedFullBet = new BetRequestDto { bet = updatedBetDto, betQuote = updatedBetQuote };
+
+            return Ok(updatedFullBet);
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteByQuoteIdAsync(Guid id)
         {

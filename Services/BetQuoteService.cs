@@ -6,6 +6,7 @@ using Domain.Dto.BetQuote;
 using Domain.Dto.Bets;
 using AutoMapper;
 using Domain.Dto.BetRequest;
+using Domain.Dto.BetableEntity;
 
 namespace Services
 {
@@ -58,19 +59,37 @@ namespace Services
             return betEntitiesDto;
         }
 
-        public async Task<bool> DeleteFullBetAsync(Guid id)
+        public async Task<BetQuoteDto> UpdateById(Guid id, UpdateBetQuotesDto newEntity)
         {
-            BetQuoteDto foundItemDto = await GetByIdAsync(id);
-            if (foundItemDto == null)
+            BetQuotes currentEntity = await _dbContext.BetQuotes.FindAsync(id);
+            if (currentEntity == null)
+            {
+                return null;
+            }
+
+            _mapper.Map(newEntity, currentEntity);
+            await _dbContext.SaveChangesAsync();
+            BetQuoteDto entityDto = _mapper.Map<BetQuoteDto>(currentEntity);
+            return entityDto;
+        }
+
+        private async Task<BetQuotes> GetByIdVanillaFormAsync(Guid id)
+        {
+            return await _dbContext.BetQuotes.FindAsync(id);
+        }
+
+        public async Task<bool> DeleteFullBetAsync(Guid id)
+        {          
+            BetQuotes betQuote = await GetByIdVanillaFormAsync(id);
+            if (betQuote == null)
             {
                 return false;
             }
 
-            BetQuotes betQuote = _mapper.Map<BetQuotes>(foundItemDto);
+            await _betsService.DeleteAsync(betQuote.BetId);
             _dbContext.BetQuotes.Remove(betQuote);
             await _dbContext.SaveChangesAsync();
-            //await _betsService.DeleteAsync(foundItemDto.BetId);
-            
+
             return true;
         }
     }

@@ -5,6 +5,7 @@ using Domain.Entities;
 using Domain.Dto.BetableEntity;
 using Domain.Dto.Bets;
 using AutoMapper;
+using Domain.Dto.BetQuote;
 
 namespace Services
 {
@@ -73,18 +74,41 @@ namespace Services
             return entitiesDto;
         }
 
+        private async Task<Bets> GetByIdVanillaForm(Guid id)
+        {
+            return await _dbContext.Bets.FindAsync(id);
+        }
+
+        public async Task<BetsDto> UpdateById(Guid id, UpdateBetsDto newEntity)
+        {
+            Bets currentEntity = await _dbContext.Bets.FindAsync(id);
+            if (currentEntity == null)
+            {
+                return null;
+            }
+
+            bool verdict = await ValidateBetBodyAsync(_mapper.Map<CreateBetsDto>(newEntity));
+            if (!verdict)
+            {
+                return null;
+            }
+
+            _mapper.Map(newEntity, currentEntity);
+            await _dbContext.SaveChangesAsync();
+            BetsDto entityDto = _mapper.Map<BetsDto>(currentEntity);
+            return entityDto;
+        }
+
         public async Task<bool> DeleteAsync(Guid id)
         {
-            BetsDto foundEntity = await GetByIdAsync(id);
-            Bets item = _mapper.Map<Bets>(foundEntity);
+            Bets foundEntity = await GetByIdVanillaForm(id);
             if (foundEntity == null)
             {
                 return false;
             }
            
-            _dbContext.Bets.Remove(item);
+            _dbContext.Bets.Remove(foundEntity);
             await _dbContext.SaveChangesAsync();
-            Console.WriteLine("Crapa pana aici ba?");
             return true;
         }
     }
