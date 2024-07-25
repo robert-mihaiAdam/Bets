@@ -5,7 +5,6 @@ using Domain.Entities;
 using Domain.Dto.BetableEntity;
 using Domain.Dto.Bets;
 using AutoMapper;
-using Domain.Dto.BetQuote;
 
 namespace Services
 {
@@ -74,11 +73,6 @@ namespace Services
             return entitiesDto;
         }
 
-        private async Task<Bets> GetByIdVanillaForm(Guid id)
-        {
-            return await _dbContext.Bets.FindAsync(id);
-        }
-
         public async Task<BetsDto> UpdateById(Guid id, UpdateBetsDto newEntity)
         {
             Bets currentEntity = await _dbContext.Bets.FindAsync(id);
@@ -101,7 +95,7 @@ namespace Services
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            Bets foundEntity = await GetByIdVanillaForm(id);
+            Bets foundEntity = await _dbContext.Bets.FindAsync(id);
             if (foundEntity == null)
             {
                 return false;

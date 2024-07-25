@@ -22,6 +22,7 @@ namespace Domain
             CreateMap<UpdateBetQuotesDto, BetQuotes>()
                     .ForMember(dest => dest.Id, opt => opt.Ignore())
                     .ForMember(dest => dest.BetId, opt => opt.Ignore());
+            
 
             CreateMap<CreateBetsDto, Bets>();
             CreateMap<Bets, BetsDto>();
@@ -30,6 +31,10 @@ namespace Domain
                     .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             CreateMap<QueryBetRequestDto, BetRequestDto>();
+            CreateMap<CreateBetRequestDto, CreateBetsDto>();
+            CreateMap<CreateBetRequestDto, CreateBetQuotesDto>();
+            CreateMap<UpdateBetRequestDto, UpdateBetsDto>();
+            CreateMap<UpdateBetRequestDto, UpdateBetQuotesDto>();
 
             CreateMap<PlacedBets, PlacedBetsDto>();
         } 

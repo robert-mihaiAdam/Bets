@@ -46,11 +46,6 @@ namespace Services
             return betableEntityDto;
         }
 
-        private async Task<BetableEntity> GetByIdVanillaAsync(Guid id)
-        {
-            return await _dbContext.BetableEntity.FindAsync(id);
-        }
-
         public async Task<BetableEntityDto> UpdateEntityByIdAsync(Guid id, UpdateBetableEntityDto newEntity)
         {
             BetableEntity currentEntity = await _dbContext.BetableEntity.FindAsync(id);
@@ -68,7 +63,7 @@ namespace Services
 
         public async Task<bool> DeleteByIdAsync(Guid id)
         {
-            BetableEntity item = await GetByIdVanillaAsync(id);
+            BetableEntity item = await _dbContext.BetableEntity.FindAsync(id);
             if (item == null)
             {
                 return false;

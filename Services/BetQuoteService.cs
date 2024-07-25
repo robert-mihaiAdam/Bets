@@ -73,14 +73,9 @@ namespace Services
             return entityDto;
         }
 
-        private async Task<BetQuotes> GetByIdVanillaFormAsync(Guid id)
-        {
-            return await _dbContext.BetQuotes.FindAsync(id);
-        }
-
         public async Task<bool> DeleteFullBetAsync(Guid id)
         {          
-            BetQuotes betQuote = await GetByIdVanillaFormAsync(id);
+            BetQuotes betQuote = await _dbContext.BetQuotes.FindAsync(id);
             if (betQuote == null)
             {
                 return false;

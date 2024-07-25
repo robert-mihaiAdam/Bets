@@ -2,7 +2,7 @@
 
 namespace Domain.Dto.BetRequest
 {
-    public class UpdateBetRequestDto
+    public class CreateBetRequestDto
     {
         [Required]
         [StringLength(255)]

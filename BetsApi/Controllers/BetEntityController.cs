@@ -20,7 +20,7 @@ namespace BetsApi.Controllers
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> PlaceBetEntityAsync(CreateBetableEntityDto newEntity)
+        public async Task<IActionResult> AddBetEntityAsync(CreateBetableEntityDto newEntity)
         {
             BetableEntityDto createdEntityDto = await _betableEntityService.CreateAsync(newEntity);
             return Ok(createdEntityDto);
