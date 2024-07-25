@@ -6,7 +6,6 @@ using Domain.Dto.BetQuote;
 using Domain.Dto.Bets;
 using AutoMapper;
 using Domain.Dto.BetRequest;
-using Domain.Dto.BetableEntity;
 
 namespace Services
 {
@@ -47,16 +46,13 @@ namespace Services
             return entityDto;
         }
 
-        public async Task<IEnumerable<BetRequestDto>> GetAllFullBetsAsync()
+        public async Task<IEnumerable<QueryBetRequestDto>> GetAllFullBetsAsync()
         {
             var query = from bq in _dbContext.Set<BetQuotes>()
                         join b in _dbContext.Set<Bets>()
-                            on bq.BetId equals b.Id
+                        on bq.BetId equals b.Id
                         select new QueryBetRequestDto { bet = b, betQuote = bq };
-
-            IEnumerable<QueryBetRequestDto> queryEntities = await query.ToArrayAsync();
-            IEnumerable<BetRequestDto> betEntitiesDto = _mapper.Map<IEnumerable<BetRequestDto>>(queryEntities);
-            return betEntitiesDto;
+            return await query.ToArrayAsync();
         }
 
         public async Task<BetQuoteDto> UpdateById(Guid id, UpdateBetQuotesDto newEntity)

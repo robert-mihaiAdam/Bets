@@ -11,7 +11,7 @@ namespace Services.Interfaces
 
         Task<BetQuoteDto> GetByIdAsync(Guid id);
 
-        Task<IEnumerable<BetRequestDto>> GetAllFullBetsAsync();
+        Task<IEnumerable<QueryBetRequestDto>> GetAllFullBetsAsync();
 
         Task<BetQuoteDto> UpdateById(Guid id, UpdateBetQuotesDto newEntity);
 
