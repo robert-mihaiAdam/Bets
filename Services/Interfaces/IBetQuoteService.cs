@@ -1,5 +1,4 @@
 ﻿using Domain.Dto.BetQuote;
-using Domain.Dto.BetRequest;
 
 namespace Services.Interfaces
 {
@@ -7,14 +6,12 @@ namespace Services.Interfaces
     {
         Task<BetQuoteDto> CreateAsync(CreateBetQuotesDto entity, Guid betId);
 
-        Task<IEnumerable<BetQuoteDto>> GetAllAsync();
+        IQueryable<BetQuoteDto> GetAllAsync();
 
         Task<BetQuoteDto> GetByIdAsync(Guid id);
 
-        Task<IEnumerable<QueryBetRequestDto>> GetAllFullBetsAsync();
-
         Task<BetQuoteDto> UpdateById(Guid id, UpdateBetQuotesDto newEntity);
 
-        Task<bool> DeleteFullBetAsync(Guid id);
+        Task<bool> DeleteByIdAsync(Guid id);
     }
 }

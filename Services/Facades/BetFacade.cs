@@ -3,6 +3,7 @@ using Domain.Dto.BetQuote;
 using Domain.Dto.Bets;
 using AutoMapper;
 using Services.Interfaces;
+using Domain.Entities;
 
 namespace Services.Facades
 {
@@ -38,7 +39,7 @@ namespace Services.Facades
             return new BetRequestDto { bet = createdBet, betQuote = createdBetQuote };
         }
 
-        public async Task<BetRequestDto> UpdateFullBetAsync(Guid id, UpdateBetRequestDto updatedFullBet)
+        public async Task<BetRequestDto> UpdateBetAsync(Guid id, UpdateBetRequestDto updatedFullBet)
         {
             UpdateBetQuotesDto updatedBetQuote = _mapper.Map<UpdateBetQuotesDto>(updatedFullBet);
             UpdateBetsDto updatedBets = _mapper.Map<UpdateBetsDto>(updatedFullBet);
@@ -60,9 +61,17 @@ namespace Services.Facades
         
         public async Task<IEnumerable<BetRequestDto>> GetAllBetsAsync()
         {
-            IEnumerable<QueryBetRequestDto> queryEntities = await _betQuoteService.GetAllFullBetsAsync();
-            IEnumerable<BetRequestDto> betEntitiesDto = _mapper.Map<IEnumerable<BetRequestDto>>(queryEntities);
-            return betEntitiesDto;
+            IQueryable<BetQuoteDto> betQuotesEntities = _betQuoteService.GetAllAsync();
+            IQueryable<BetsDto> betDtoEntities = _betService.GetAllAsync();
+            var query = betQuotesEntities.Join(betDtoEntities,
+                                                betQuote => betQuote.BetId,
+                                                bet => bet.Id,
+                                                (betQuote, bet) => new BetRequestDto
+                                                {
+                                                  bet = bet,
+                                                  betQuote = betQuote,
+                                                });
+            return query.ToList();
         }
 
         public async Task<BetRequestDto> GetBetByIdAsync(Guid betQuoteId)
@@ -81,6 +90,19 @@ namespace Services.Facades
             BetsDto currentBet = await _betService.GetByIdAsync(currentQuote.BetId);
             BetRequestDto betQuoteEntity = new BetRequestDto { bet = currentBet, betQuote = currentQuote };
             return betQuoteEntity;
+        }
+
+        public async Task<bool> DeleteByIdAsync(Guid betQuoteId)
+        {
+            BetQuoteDto betQuote = await _betQuoteService.GetByIdAsync(betQuoteId);
+            if (betQuote == null)
+            {
+                return false;
+            }
+            Guid betId = betQuote.BetId;
+            bool checkBetDeleted = await _betService.DeleteByIdAsync(betId);
+            bool checkBetQuoteDeleted = await _betQuoteService.DeleteByIdAsync(betQuoteId);
+            return (checkBetQuoteDeleted && checkBetDeleted);
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using Domain.Dto.BetQuote;
-using Domain.Dto.Bets;
-using Domain.Dto.BetRequest;
+﻿    using Domain.Dto.BetRequest;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 
@@ -11,17 +8,10 @@ namespace BetsApi.Controllers
     [Route("/api/[controller]")]
     public class BetController : Controller
     {
-        private readonly IBetsService _betService;
-        private readonly IBetQuoteService _betQuoteService;
-        private readonly IMapper _mapper;
         private readonly IBetFacade _betFacade;
 
-        public BetController(IBetsService betService, IBetQuoteService betQuoteService, IMapper mapper, IBetFacade betFacade)
+        public BetController(IBetFacade betFacade)
         {
-            Console.WriteLine("Face constructorul?");
-            _betService = betService;
-            _betQuoteService = betQuoteService;
-            _mapper = mapper;
             _betFacade = betFacade;
         }
 
@@ -33,7 +23,7 @@ namespace BetsApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetFullBetByIdAsync(Guid id)
+        public async Task<IActionResult> GetBetByIdAsync(Guid id)
         {
             BetRequestDto entity = await _betFacade.GetBetByIdAsync(id);
             if (entity == null)
@@ -47,22 +37,21 @@ namespace BetsApi.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetAllAsync()
         {
-            Console.WriteLine("INtra aici?");
             IEnumerable<BetRequestDto> betsDtosEntities = await _betFacade.GetAllBetsAsync();
             return Ok(betsDtosEntities);
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> EditFullBetAsync(Guid id, UpdateBetRequestDto newEntity)
+        public async Task<IActionResult> EditBetAsync(Guid id, UpdateBetRequestDto newEntity)
         {
-            BetRequestDto updatedFullBet = await _betFacade.UpdateFullBetAsync(id, newEntity);
-            return Ok(updatedFullBet);
+            BetRequestDto updatedBet = await _betFacade.UpdateBetAsync(id, newEntity);
+            return Ok(updatedBet);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteByQuoteIdAsync(Guid id)
+        public async Task<IActionResult> DeleteByIdAsync(Guid id)
         {
-            bool checkRemove = await _betQuoteService.DeleteFullBetAsync(id);
+            bool checkRemove = await _betFacade.DeleteByIdAsync(id);
             if(!checkRemove)
             {
                 return NotFound($"Bet Quote with id: {id} doesn't exists");

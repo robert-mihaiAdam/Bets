@@ -46,8 +46,8 @@ namespace Services
 
         public async Task<BetsDto> CreateAsync(CreateBetsDto entity)
         {
-            bool verdict = await ValidateBetBodyAsync(entity);
-            if (!verdict)
+            bool checkBetableEntities = await ValidateBetBodyAsync(entity);
+            if (!checkBetableEntities)
             {
                 return null;
             }
@@ -59,11 +59,10 @@ namespace Services
             return newBetDto;
         }
 
-        public async Task<IEnumerable<BetsDto>> GetAllAsync()
+        public IQueryable<BetsDto> GetAllAsync()
         {
-            IEnumerable<Bets> entities = await _dbContext.Bets.ToListAsync();
-            IEnumerable<BetsDto> entitiesDto = _mapper.Map<IEnumerable<BetsDto>>(entities);
-            return entitiesDto;
+            IEnumerable<BetsDto> entities = _mapper.Map<IEnumerable<BetsDto>>(_dbContext.Bets);
+            return entities.AsQueryable();
         }
 
         public async Task<BetsDto> GetByIdAsync(Guid id)
@@ -81,8 +80,8 @@ namespace Services
                 return null;
             }
 
-            bool verdict = await ValidateBetBodyAsync(_mapper.Map<CreateBetsDto>(newEntity));
-            if (!verdict)
+            bool checkBetableEntities = await ValidateBetBodyAsync(_mapper.Map<CreateBetsDto>(newEntity));
+            if (!checkBetableEntities)
             {
                 return null;
             }
@@ -93,7 +92,7 @@ namespace Services
             return entityDto;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteByIdAsync(Guid id)
         {
             Bets foundEntity = await _dbContext.Bets.FindAsync(id);
             if (foundEntity == null)

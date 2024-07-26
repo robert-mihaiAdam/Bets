@@ -1,11 +1,9 @@
 ﻿using Services.Interfaces;
 using DataAccess;
-using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
 using Domain.Dto.BetQuote;
-using Domain.Dto.Bets;
 using AutoMapper;
-using Domain.Dto.BetRequest;
+using System.Collections.Generic;
 
 namespace Services
 {
@@ -32,11 +30,10 @@ namespace Services
             return newBetQuoteDto;
         }
 
-        public async Task<IEnumerable<BetQuoteDto>> GetAllAsync()
+        public IQueryable<BetQuoteDto> GetAllAsync()
         {
-            IEnumerable<BetQuotes> entities = await _dbContext.BetQuotes.ToListAsync();
-            IEnumerable<BetQuoteDto> entitiesDto = _mapper.Map<IEnumerable<BetQuoteDto>>(entities);
-            return entitiesDto;
+            IEnumerable<BetQuoteDto> entities = _mapper.Map<IEnumerable<BetQuoteDto>>(_dbContext.BetQuotes);
+            return entities.AsQueryable();
         }
 
         public async Task<BetQuoteDto> GetByIdAsync(Guid id)
@@ -44,15 +41,6 @@ namespace Services
             BetQuotes entity = await _dbContext.BetQuotes.FindAsync(id);
             BetQuoteDto entityDto = _mapper.Map<BetQuoteDto>(entity);
             return entityDto;
-        }
-
-        public async Task<IEnumerable<QueryBetRequestDto>> GetAllFullBetsAsync()
-        {
-            var query = from bq in _dbContext.Set<BetQuotes>()
-                        join b in _dbContext.Set<Bets>()
-                        on bq.BetId equals b.Id
-                        select new QueryBetRequestDto { bet = b, betQuote = bq };
-            return await query.ToArrayAsync();
         }
 
         public async Task<BetQuoteDto> UpdateById(Guid id, UpdateBetQuotesDto newEntity)
@@ -69,7 +57,7 @@ namespace Services
             return entityDto;
         }
 
-        public async Task<bool> DeleteFullBetAsync(Guid id)
+        public async Task<bool> DeleteByIdAsync(Guid id)
         {          
             BetQuotes betQuote = await _dbContext.BetQuotes.FindAsync(id);
             if (betQuote == null)
@@ -77,7 +65,6 @@ namespace Services
                 return false;
             }
 
-            await _betsService.DeleteAsync(betQuote.BetId);
             _dbContext.BetQuotes.Remove(betQuote);
             await _dbContext.SaveChangesAsync();
 

@@ -6,10 +6,12 @@ namespace Services.Interfaces
     {
         Task<BetRequestDto> CreateBetAsync(CreateBetRequestDto newFullBet);
 
-        Task<BetRequestDto> UpdateFullBetAsync(Guid id, UpdateBetRequestDto updatedFullBet);
+        Task<BetRequestDto> UpdateBetAsync(Guid id, UpdateBetRequestDto updatedFullBet);
 
         Task<IEnumerable<BetRequestDto>> GetAllBetsAsync();
 
         Task<BetRequestDto> GetBetByIdAsync(Guid betQuoteId);
+
+        Task<bool> DeleteByIdAsync(Guid betQuoteId);
     }
 }
