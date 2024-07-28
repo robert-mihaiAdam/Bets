@@ -1,4 +1,4 @@
-﻿    using Domain.Dto.BetRequest;
+﻿using Domain.Dto.BetRequest;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 

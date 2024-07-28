@@ -1,6 +1,5 @@
 ﻿using Services.Interfaces;
 using DataAccess;
-using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
 using Domain.Dto.BetableEntity;
 using Domain.Dto.Bets;
@@ -59,10 +58,11 @@ namespace Services
             return newBetDto;
         }
 
-        public IQueryable<BetsDto> GetAllAsync()
+        public IQueryable<Bets> GetAllAsync()
         {
-            IEnumerable<BetsDto> entities = _mapper.Map<IEnumerable<BetsDto>>(_dbContext.Bets);
-            return entities.AsQueryable();
+            //IEnumerable<BetsDto> entities = _mapper.Map<IEnumerable<BetsDto>>(_dbContext.Bets);
+            //return entities.AsQueryable();
+            return _dbContext.Bets.AsQueryable();
         }
 
         public async Task<BetsDto> GetByIdAsync(Guid id)

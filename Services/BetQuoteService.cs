@@ -4,6 +4,7 @@ using Domain.Entities;
 using Domain.Dto.BetQuote;
 using AutoMapper;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services
 {
@@ -11,13 +12,11 @@ namespace Services
     {
         private readonly DBContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly IBetsService _betsService;
 
-        public BetQuoteService(DBContext dBContext, IMapper mapper, IBetsService betsService)
+        public BetQuoteService(DBContext dBContext, IMapper mapper)
         {
             _dbContext = dBContext;
             _mapper = mapper;
-            _betsService = betsService;
         }
 
         public async Task<BetQuoteDto> CreateAsync(CreateBetQuotesDto entity, Guid betId)
@@ -30,10 +29,18 @@ namespace Services
             return newBetQuoteDto;
         }
 
-        public IQueryable<BetQuoteDto> GetAllAsync()
+        public IQueryable<BetQuotes> GetAllAsync()
         {
-            IEnumerable<BetQuoteDto> entities = _mapper.Map<IEnumerable<BetQuoteDto>>(_dbContext.BetQuotes);
-            return entities.AsQueryable();
+            //IEnumerable<BetQuoteDto> entities = _mapper.Map<IEnumerable<BetQuoteDto>>(_dbContext.BetQuotes);
+            //return entities.AsQueryable();
+            return _dbContext.BetQuotes.AsQueryable();
+        }
+
+        public async Task<BetQuoteDto>GetByBetIdAsync(Guid betId)
+        {
+            BetQuotes entity =  await _dbContext.BetQuotes.FirstOrDefaultAsync(bq => bq.BetId == betId);
+            BetQuoteDto entityDto = _mapper.Map<BetQuoteDto>(entity);
+            return entityDto;
         }
 
         public async Task<BetQuoteDto> GetByIdAsync(Guid id)

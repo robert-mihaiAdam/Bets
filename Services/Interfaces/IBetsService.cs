@@ -1,4 +1,5 @@
 ﻿using Domain.Dto.Bets;
+using Domain.Entities;
 
 namespace Services.Interfaces
 {
@@ -6,7 +7,7 @@ namespace Services.Interfaces
     {
         Task<BetsDto> CreateAsync(CreateBetsDto entity);
 
-        IQueryable<BetsDto> GetAllAsync();
+        IQueryable<Bets> GetAllAsync();
 
         Task<BetsDto> GetByIdAsync(Guid id);
 
