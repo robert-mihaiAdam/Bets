@@ -2,7 +2,6 @@
 using Domain;
 using Domain.Dto.BetableEntity;
 using Domain.Dto.BetQuote;
-using Domain.Dto.BetRequest;
 using Domain.Dto.Bets;
 using Domain.Dto.FullBetView;
 using Domain.Dto.PlacedBet;
@@ -14,7 +13,7 @@ namespace Services.Facades
 {
     public class PlacedBetFacade : IPlacedBetFacade
     {
-        private readonly IPlacedBetsService _placesService;
+        private readonly IPlacedBetsService _placedBetsService;
         private readonly IBetQuoteService _betQuoteService;
         private readonly IBetsService _betService;
         private readonly IBetableEntityService _betableEntityService;
@@ -26,7 +25,7 @@ namespace Services.Facades
                                IBetableEntityService betableService,
                                IMapper mapper) 
         {
-            _placesService = placedBetsService;
+            _placedBetsService = placedBetsService;
             _betQuoteService = betQuoteService;
             _betService = betsService;
             _betableEntityService = betableService;
@@ -44,14 +43,19 @@ namespace Services.Facades
             {
                 return null;
             }
-            PlacedBetsDto newPlacedBetsDto = await _placesService.CreateAsync(newPlacedBet);
-            await _betQuoteService.UpdateBetQuotes(newPlacedBetsDto.Type, newPlacedBet.QuoteId);
+
+            Guid quoteId = newPlacedBet.QuoteId;
+            BetQuoteDto currentQuote = await _betQuoteService.GetByIdAsync(quoteId);
+            if (currentQuote == null)
+                return null;
+
+            PlacedBetsDto newPlacedBetsDto = await _placedBetsService.CreateAsync(newPlacedBet);
             return newPlacedBetsDto;
         }
 
         public async Task<FullBetViewDto> GetPlacedBetByIdAsync(Guid id)
         {
-            IQueryable<PlacedBets> placedBetsEntities = _placesService.GetAll();
+            IQueryable<PlacedBets> placedBetsEntities = _placedBetsService.GetAll();
             IQueryable<BetQuotes> betQuotesEntities = _betQuoteService.GetAll();
             IQueryable<Bets> betDtoEntities = _betService.GetAll();
             IQueryable<BetableEntity> betableEntities = _betableEntityService.GetAll();
@@ -74,7 +78,7 @@ namespace Services.Facades
 
         public async Task<IEnumerable<FullBetViewDto>> GetAllPlacedBetAsync()
         {
-            IQueryable<PlacedBets> placedBetsEntities = _placesService.GetAll();
+            IQueryable<PlacedBets> placedBetsEntities = _placedBetsService.GetAll();
             IQueryable<BetQuotes> betQuotesEntities = _betQuoteService.GetAll();
             IQueryable<Bets> betDtoEntities = _betService.GetAll();
             IQueryable<BetableEntity> betableEntities = _betableEntityService.GetAll();
@@ -101,14 +105,13 @@ namespace Services.Facades
                 return null;
             }
 
-            PlacedBetsDto updatedPlacedBetDto = await _placesService.UpdateByIdAsync(id, updatePlacedBet);
-            await _betQuoteService.UpdateBetQuotes(updatedPlacedBetDto.Type, updatedPlacedBetDto.QuoteId);
+            PlacedBetsDto updatedPlacedBetDto = await _placedBetsService.UpdateByIdAsync(id, updatePlacedBet);
             return updatedPlacedBetDto;
         }
 
         public async Task<bool> DeletePlacedBetByIdAsync(Guid id)
         {
-            return await _placesService.DeletePlacedBetByIdAsync(id);
+            return await _placedBetsService.DeletePlacedBetByIdAsync(id);
         }
     }
 }

@@ -16,8 +16,6 @@ namespace Services.Interfaces
 
         Task<BetQuoteDto> UpdateById(Guid id, UpdateBetQuotesDto newEntity);
 
-        Task<bool> UpdateBetQuotes(BetOptions type, Guid betQuoteId);
-
         Task<bool> DeleteByIdAsync(Guid id);
     }
 }

@@ -12,24 +12,17 @@ namespace Services
     {
         private readonly DBContext _dbContext;
         private readonly TimeProvider _timeProvider;
-        private readonly IBetQuoteService _betQuoteService;
         private readonly IMapper _mapper;
 
         public PlacedBetsService(DBContext dbContext, TimeProvider timeProvider, IBetQuoteService betQuoteService, IMapper mapper)
         {
             _dbContext = dbContext;
             _timeProvider = timeProvider;
-            _betQuoteService = betQuoteService;
             _mapper = mapper;
         }
 
         public async Task<PlacedBetsDto> CreateAsync(CreatePlacedBetDto newEntity)
         {
-            Guid quoteId = newEntity.QuoteId;
-            BetQuoteDto currentQuote = await _betQuoteService.GetByIdAsync(quoteId);
-            if (currentQuote == null)
-                return null;
-
             PlacedBets newPlacedBets = _mapper.Map<PlacedBets>(newEntity);
             newPlacedBets.PlacedDate = _timeProvider.GetUtcNow().DateTime;
             newPlacedBets.UserId = new Guid();
