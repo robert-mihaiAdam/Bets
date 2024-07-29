@@ -1,17 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Domain.Dto
+﻿namespace Domain.Dto.Bets
 {
     public class BetsDto
-    { 
-        [Required]
-        [StringLength(255)]
+    {
+        public Guid Id { get; set; }
+
         public string Name { get; set; }
 
-        [Required]
         public Guid BetableEntityA { get; set; }
 
-        [Required]
         public Guid BetableEntityB { get; set; }
     }
 }

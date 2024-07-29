@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Services;
 using Services.Interfaces;
 using Domain;
+using Services.Facades;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -17,6 +18,8 @@ builder.Services.AddScoped<IBetableEntityService, BetableEntityService>();
 builder.Services.AddScoped<IBetQuoteService, BetQuoteService>();
 builder.Services.AddScoped<IBetsService, BetsService>();
 builder.Services.AddScoped<IPlacedBetsService, PlacedBetsService>();
+builder.Services.AddScoped<IBetFacade, BetFacade>();
+
 
 builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 

@@ -4,7 +4,7 @@ namespace Services.Interfaces
 {
     public interface IBetableEntityService
     {
-        Task<BetableEntityDto> CreateAsync(PlaceBetableEntityDto entity);
+        Task<BetableEntityDto> CreateAsync(CreateBetableEntityDto entity);
 
         Task<IEnumerable<BetableEntityDto>> GetAllAsync();
 

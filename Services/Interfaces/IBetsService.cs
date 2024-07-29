@@ -1,13 +1,18 @@
-﻿using Domain.Entities;
+﻿using Domain.Dto.Bets;
+using Domain.Entities;
 
 namespace Services.Interfaces
 {
     public interface IBetsService
     {
-        Task<Bets> CreateAsync(Bets entity);
+        Task<BetsDto> CreateAsync(CreateBetsDto entity);
 
-        Task<IEnumerable<Bets>> GetAllAsync();
+        IQueryable<Bets> GetAllAsync();
 
-        Task<Bets> GetByIdAsync(Guid id);
+        Task<BetsDto> GetByIdAsync(Guid id);
+
+        Task<BetsDto> UpdateById(Guid id, UpdateBetsDto newEntity);
+
+        Task<bool> DeleteByIdAsync(Guid id);
     }
 }

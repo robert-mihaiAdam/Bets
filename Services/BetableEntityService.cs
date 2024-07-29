@@ -18,7 +18,7 @@ namespace Services
             _mapper = mapper;
         }
 
-        public async Task<BetableEntityDto> CreateAsync(PlaceBetableEntityDto entity)
+        public async Task<BetableEntityDto> CreateAsync(CreateBetableEntityDto entity)
         {
             BetableEntity newBetableEntity = _mapper.Map<BetableEntity>(entity);
             _dbContext.BetableEntity.Add(newBetableEntity);
@@ -63,8 +63,7 @@ namespace Services
 
         public async Task<bool> DeleteByIdAsync(Guid id)
         {
-            BetableEntityDto foundItemDto = await GetByIdAsync(id);
-            BetableEntity item = _mapper.Map<BetableEntity>(foundItemDto);
+            BetableEntity item = await _dbContext.BetableEntity.FindAsync(id);
             if (item == null)
             {
                 return false;
