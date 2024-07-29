@@ -5,6 +5,7 @@ using Domain.Dto.BetQuote;
 using AutoMapper;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Domain;
 
 namespace Services
 {
@@ -46,6 +47,45 @@ namespace Services
             BetQuotes entity = await _dbContext.BetQuotes.FindAsync(id);
             BetQuoteDto entityDto = _mapper.Map<BetQuoteDto>(entity);
             return entityDto;
+        }
+
+        private BetQuotes GetNewQuotesByType(BetOptions type,  BetQuotes currentBetQuote)
+        {
+            if(type == BetOptions.A)
+            {
+                currentBetQuote.QuoteA += 0.01m;
+                currentBetQuote.QuoteX -= 0.01m;
+                currentBetQuote.QuoteB -= 0.01m;
+            }
+
+            if (type == BetOptions.B)
+            {
+                currentBetQuote.QuoteA -= 0.01m;
+                currentBetQuote.QuoteX -= 0.01m;
+                currentBetQuote.QuoteB += 0.01m;
+            }
+
+            if (type == BetOptions.X)
+            {
+                currentBetQuote.QuoteA -= 0.01m;
+                currentBetQuote.QuoteX -= 0.01m;
+                currentBetQuote.QuoteB += 0.01m;
+            }
+
+            return currentBetQuote;
+        }
+
+        public async Task<bool> UpdateBetQuotes(BetOptions type, Guid betQuoteId)
+        {
+            BetQuotes currentBetQuote = await _dbContext.BetQuotes.FindAsync(betQuoteId);
+            if(currentBetQuote == null)
+            {
+                return false;
+            }
+
+            currentBetQuote = GetNewQuotesByType(type, currentBetQuote);
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
 
         public async Task<BetQuoteDto> UpdateById(Guid id, UpdateBetQuotesDto newEntity)

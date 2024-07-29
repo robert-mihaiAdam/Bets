@@ -45,10 +45,9 @@ namespace Services.Facades
                 return null;
             }
             PlacedBetsDto newPlacedBetsDto = await _placesService.CreateAsync(newPlacedBet);
+            await _betQuoteService.UpdateBetQuotes(newPlacedBetsDto.Type, newPlacedBet.QuoteId);
             return newPlacedBetsDto;
         }
-
-
 
         public async Task<FullBetViewDto> GetPlacedBetByIdAsync(Guid id)
         {
@@ -103,6 +102,7 @@ namespace Services.Facades
             }
 
             PlacedBetsDto updatedPlacedBetDto = await _placesService.UpdateByIdAsync(id, updatePlacedBet);
+            await _betQuoteService.UpdateBetQuotes(updatedPlacedBetDto.Type, updatedPlacedBetDto.QuoteId);
             return updatedPlacedBetDto;
         }
 

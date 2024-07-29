@@ -1,4 +1,5 @@
-﻿using Domain.Dto.BetQuote;
+﻿using Domain;
+using Domain.Dto.BetQuote;
 using Domain.Entities;
 
 namespace Services.Interfaces
@@ -14,6 +15,8 @@ namespace Services.Interfaces
         Task<BetQuoteDto> GetByBetIdAsync(Guid betId);
 
         Task<BetQuoteDto> UpdateById(Guid id, UpdateBetQuotesDto newEntity);
+
+        Task<bool> UpdateBetQuotes(BetOptions type, Guid betQuoteId);
 
         Task<bool> DeleteByIdAsync(Guid id);
     }
