@@ -4,7 +4,7 @@ using Domain.Dto.Bets;
 using AutoMapper;
 using Services.Interfaces;
 using Domain.Entities;
-using Domain.Dto.PlacedBet;
+using DataAccess;
 
 namespace Services.Facades
 {
@@ -13,32 +13,63 @@ namespace Services.Facades
         private readonly IMapper _mapper;
         private readonly IBetsService _betService;
         private readonly IBetQuoteService _betQuoteService;
+        private readonly DBContext _dbContext;
 
-        public BetFacade(IMapper mapper, IBetsService betService, IBetQuoteService betQuote)
+        public BetFacade(IMapper mapper, IBetsService betService, IBetQuoteService betQuote, DBContext dbContext)
         {
             _mapper = mapper;
             _betService = betService;
             _betQuoteService = betQuote;
+            _dbContext = dbContext;
         }
 
         public async Task<BetRequestDto> CreateBetAsync(CreateBetRequestDto newFullBet)
         {
             CreateBetQuotesDto newBetQuote = _mapper.Map<CreateBetQuotesDto>(newFullBet);
             CreateBetsDto newBets = _mapper.Map<CreateBetsDto>(newFullBet);
-            BetsDto createdBet = await _betService.CreateAsync(newBets);
-            BetQuoteDto createdBetQuote = await _betQuoteService.CreateAsync(newBetQuote, createdBet.Id);
-            return new BetRequestDto { bet = createdBet, betQuote = createdBetQuote };
+
+            using var transaction = _dbContext.Database.BeginTransaction();
+            try
+            {
+                BetsDto createdBet = await _betService.CreateAsync(newBets);
+                 BetQuoteDto createdBetQuote = await _betQuoteService.CreateAsync(newBetQuote, createdBet.Id);
+                   transaction.Commit();
+                return new BetRequestDto { bet = createdBet, betQuote = createdBetQuote };
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                throw ex;
+            }
         }
 
         public async Task<BetRequestDto> UpdateBetAsync(Guid betId, UpdateBetRequestDto updatedFullBet)
         {
             UpdateBetQuotesDto updatedBetQuote = _mapper.Map<UpdateBetQuotesDto>(updatedFullBet);
             UpdateBetsDto updatedBets = _mapper.Map<UpdateBetsDto>(updatedFullBet);
-            BetQuoteDto currentBetQuote = await _betQuoteService.GetByBetIdAsync(betId);
-            BetQuoteDto newBetQuote = await _betQuoteService.UpdateById(currentBetQuote.Id, updatedBetQuote);
-            BetsDto newBetDto = await _betService.UpdateById(betId, updatedBets);
-            BetRequestDto newFullBet = new BetRequestDto { bet = newBetDto, betQuote = newBetQuote };
-            return newFullBet;
+
+            using var transaction = _dbContext.Database.BeginTransaction();
+            try
+            {
+                BetQuoteDto currentBetQuote = await _betQuoteService.GetByBetIdAsync(betId);
+                if (currentBetQuote == null)
+                {
+                    transaction.Rollback();
+                    return null;
+                }
+
+                BetQuoteDto newBetQuote = await _betQuoteService.UpdateById(currentBetQuote.Id, updatedBetQuote);
+                BetsDto newBetDto = await _betService.UpdateById(betId, updatedBets);
+                transaction.Commit();
+                BetRequestDto newFullBet = new BetRequestDto { bet = newBetDto, betQuote = newBetQuote };
+                return newFullBet;
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                throw ex;
+            }
+
         }
 
         public async Task<IEnumerable<BetRequestDto>> GetAllBetsAsync()
