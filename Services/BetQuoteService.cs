@@ -31,8 +31,6 @@ namespace Services
 
         public IQueryable<BetQuotes> GetAllAsync()
         {
-            //IEnumerable<BetQuoteDto> entities = _mapper.Map<IEnumerable<BetQuoteDto>>(_dbContext.BetQuotes);
-            //return entities.AsQueryable();
             return _dbContext.BetQuotes.AsQueryable();
         }
 
