@@ -32,6 +32,13 @@ namespace Services
             return _dbContext.BetableEntity.AsQueryable();
         }
 
+        public async Task<IEnumerable<BetableEntityDto>> GetAllAsync()
+        {
+            IEnumerable<BetableEntity> betableEntities = await _dbContext.BetableEntity.ToListAsync();
+            IEnumerable<BetableEntityDto> dtoEntities = _mapper.Map<IEnumerable<BetableEntityDto>>(betableEntities);
+            return dtoEntities;
+        }
+
         public async Task<BetableEntityDto> GetByIdAsync(Guid id)
         {
             BetableEntity betableEntity = await _dbContext.BetableEntity.FindAsync(id);

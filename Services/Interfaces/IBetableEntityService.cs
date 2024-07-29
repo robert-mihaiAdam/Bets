@@ -9,6 +9,8 @@ namespace Services.Interfaces
 
         IQueryable<BetableEntity> GetAll();
 
+        Task<IEnumerable<BetableEntityDto>> GetAllAsync();
+
         Task<BetableEntityDto> GetByIdAsync(Guid id);
 
         Task<BetableEntityDto> UpdateEntityByIdAsync(Guid id, UpdateBetableEntityDto entity);
