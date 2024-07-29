@@ -58,7 +58,7 @@ namespace Services
             return newBetDto;
         }
 
-        public IQueryable<Bets> GetAllAsync()
+        public IQueryable<Bets> GetAll()
         {
             return _dbContext.Bets.AsQueryable();
         }

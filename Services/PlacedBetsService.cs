@@ -2,8 +2,9 @@
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
-using Domain.Command;
 using Domain.Dto.BetQuote;
+using Domain.Dto.PlacedBet;
+using AutoMapper;
 
 namespace Services
 {
@@ -12,47 +13,72 @@ namespace Services
         private readonly DBContext _dbContext;
         private readonly TimeProvider _timeProvider;
         private readonly IBetQuoteService _betQuoteService;
+        private readonly IMapper _mapper;
 
-        public PlacedBetsService(DBContext dbContext, TimeProvider timeProvider, IBetQuoteService betQuoteService)
+        public PlacedBetsService(DBContext dbContext, TimeProvider timeProvider, IBetQuoteService betQuoteService, IMapper mapper)
         {
             _dbContext = dbContext;
             _timeProvider = timeProvider;
             _betQuoteService = betQuoteService;
+            _mapper = mapper;
         }
 
-        public async Task<PlacedBets> CreateAsync(PlacedBets entity)
+        public async Task<PlacedBetsDto> CreateAsync(CreatePlacedBetDto newEntity)
         {
-            entity.PlacedDate = _timeProvider.GetUtcNow().DateTime;
-            Guid quoteId = entity.QuoteId;
+            Guid quoteId = newEntity.QuoteId;
             BetQuoteDto currentQuote = await _betQuoteService.GetByIdAsync(quoteId);
             if (currentQuote == null)
                 return null;
-            _dbContext.PlacedBets.Add(entity);
+
+            PlacedBets newPlacedBets = _mapper.Map<PlacedBets>(newEntity);
+            newPlacedBets.PlacedDate = _timeProvider.GetUtcNow().DateTime;
+            newPlacedBets.UserId = new Guid();
+
+            _dbContext.PlacedBets.Add(newPlacedBets);
             await _dbContext.SaveChangesAsync();
-            return entity;
+            PlacedBetsDto placedBetsDto = _mapper.Map<PlacedBetsDto>(newPlacedBets); 
+            return placedBetsDto;
         }
 
-        public async Task<IEnumerable<PlacedBets>> GetAllAsync()
+        public IQueryable<PlacedBets> GetAll()
         {
-            return await _dbContext.PlacedBets.ToListAsync();
+            return  _dbContext.PlacedBets.AsQueryable();
         }
 
-        public async Task<PlacedBets?> GetByIdAsync(Guid id)
+        public async Task<PlacedBetsDto> GetByIdAsync(Guid id)
         {
-            return await _dbContext.PlacedBets.FindAsync(id);
+            PlacedBets currentPlacedBet = await _dbContext.PlacedBets.FindAsync(id);
+            PlacedBetsDto currentPlacedBetDto = _mapper.Map<PlacedBetsDto>(currentPlacedBet);
+            return currentPlacedBetDto;
         }
 
-        public async Task<PlacedBets> UpdateAsync(Guid id, UpdatePlacedBets newEntity)
+        public async Task<PlacedBetsDto> UpdateByIdAsync(Guid id, UpdatePlacedBetDto newEntity)
         {
             PlacedBets currentBet = await _dbContext.PlacedBets.FindAsync(id);
             if (currentBet == null)
             {
                 return null;
             }
+
+         
+            _mapper.Map(newEntity, currentBet);
             currentBet.PlacedDate = _timeProvider.GetUtcNow().DateTime;
-            //currentBet.Type = newEntity.Type;
             await _dbContext.SaveChangesAsync();
-            return currentBet;
+            PlacedBetsDto updatedPlacedBet = _mapper.Map<PlacedBetsDto>(currentBet);
+            return updatedPlacedBet;
+        }
+
+        public async Task<bool> DeletePlacedBetByIdAsync(Guid id)
+        {
+            PlacedBets currentPlacedBet = await _dbContext.PlacedBets.FindAsync(id);
+            if (currentPlacedBet == null)
+            {
+                return false;
+            }
+
+            _dbContext.PlacedBets.Remove(currentPlacedBet);
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Services
             return newBetQuoteDto;
         }
 
-        public IQueryable<BetQuotes> GetAllAsync()
+        public IQueryable<BetQuotes> GetAll()
         {
             return _dbContext.BetQuotes.AsQueryable();
         }

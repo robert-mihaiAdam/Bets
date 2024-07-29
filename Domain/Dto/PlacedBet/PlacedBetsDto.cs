@@ -1,14 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Dto
+namespace Domain.Dto.PlacedBet
 
 {
     public class PlacedBetsDto
     {
-        [Required]
+        public Guid Id { get; set; }
+
+        public Guid UserId { get; set; }
+
+        public DateTime PlacedDate { get; set; }
+
         public BetOptions Type { get; set; }
 
-        [Required]
         public Guid QuoteId { get; set; }
     }
 }

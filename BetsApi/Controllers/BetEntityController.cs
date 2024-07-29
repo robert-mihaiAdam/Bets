@@ -39,12 +39,12 @@ namespace BetsApi.Controllers
             return Ok(foundEntity);
         }
 
-        [HttpGet("all")]
-        public async Task<IActionResult> GetAllBetEntitiesAsync()
-        {
-            IEnumerable<BetableEntityDto> dtoEntities = await _betableEntityService.GetAllAsync();
-            return Ok(dtoEntities);
-        }
+        //[HttpGet("all")]
+        //public async Task<IActionResult> GetAllBetEntitiesAsync()
+        //{
+        //    IEnumerable<BetableEntityDto> dtoEntities = _betableEntityService.GetAll();
+        //    return Ok(dtoEntities);
+        //}
 
         [HttpPatch("{id}")]
         public async Task<IActionResult> EditBetEntityByIdAsync(Guid id, UpdateBetableEntityDto newEntity)

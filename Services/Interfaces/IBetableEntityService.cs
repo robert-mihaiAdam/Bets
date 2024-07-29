@@ -1,4 +1,5 @@
 ﻿using Domain.Dto.BetableEntity;
+using Domain.Entities;
 
 namespace Services.Interfaces
 {
@@ -6,7 +7,7 @@ namespace Services.Interfaces
     {
         Task<BetableEntityDto> CreateAsync(CreateBetableEntityDto entity);
 
-        Task<IEnumerable<BetableEntityDto>> GetAllAsync();
+        IQueryable<BetableEntity> GetAll();
 
         Task<BetableEntityDto> GetByIdAsync(Guid id);
 

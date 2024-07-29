@@ -7,7 +7,7 @@ namespace Services.Interfaces
     {
         Task<BetsDto> CreateAsync(CreateBetsDto entity);
 
-        IQueryable<Bets> GetAllAsync();
+        IQueryable<Bets> GetAll();
 
         Task<BetsDto> GetByIdAsync(Guid id);
 
