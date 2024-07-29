@@ -3,7 +3,6 @@ using DataAccess;
 using Domain.Entities;
 using Domain.Dto.BetQuote;
 using AutoMapper;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace Services

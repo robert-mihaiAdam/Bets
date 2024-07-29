@@ -19,6 +19,7 @@ builder.Services.AddScoped<IBetQuoteService, BetQuoteService>();
 builder.Services.AddScoped<IBetsService, BetsService>();
 builder.Services.AddScoped<IPlacedBetsService, PlacedBetsService>();
 builder.Services.AddScoped<IBetFacade, BetFacade>();
+builder.Services.AddScoped<IBetableEntityFacade, BetableEntityFacade>();
 
 
 builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
