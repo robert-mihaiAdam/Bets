@@ -13,6 +13,6 @@ namespace Services.Interfaces
 
         Task<BetsDto> UpdateById(Guid id, UpdateBetsDto newEntity);
 
-        Task<bool> DeleteByIdAsync(Guid id);
+        Task DeleteByIdAsync(Guid id);
     }
 }

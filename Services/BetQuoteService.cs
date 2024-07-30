@@ -36,13 +36,27 @@ namespace Services
         public async Task<BetQuoteDto>GetByBetIdAsync(Guid betId)
         {
             BetQuotes entity =  await _dbContext.BetQuotes.FirstOrDefaultAsync(bq => bq.BetId == betId);
+            if (entity == null)
+            {
+                throw new Exception($"Doesn't exists a bet quote for bet with id:{betId}");
+            }
             BetQuoteDto entityDto = _mapper.Map<BetQuoteDto>(entity);
             return entityDto;
         }
 
-        public async Task<BetQuoteDto> GetByIdAsync(Guid id)
+        private async Task<BetQuotes> GetByIdVanillaAsync(Guid id)
         {
             BetQuotes entity = await _dbContext.BetQuotes.FindAsync(id);
+            if (entity == null)
+            {
+                throw new Exception($"Bet quote with id: {id} doesn't exists");
+            }
+            return entity;
+        }
+
+        public async Task<BetQuoteDto> GetByIdAsync(Guid id)
+        {
+            BetQuotes entity = await GetByIdVanillaAsync(id);
             BetQuoteDto entityDto = _mapper.Map<BetQuoteDto>(entity);
             return entityDto;
         }
@@ -50,30 +64,18 @@ namespace Services
 
         public async Task<BetQuoteDto> UpdateById(Guid id, UpdateBetQuotesDto newEntity)
         {
-            BetQuotes currentEntity = await _dbContext.BetQuotes.FindAsync(id);
-            if (currentEntity == null)
-            {
-                return null;
-            }
-
+            BetQuotes currentEntity = await GetByIdVanillaAsync(id);
             _mapper.Map(newEntity, currentEntity);
             await _dbContext.SaveChangesAsync();
             BetQuoteDto entityDto = _mapper.Map<BetQuoteDto>(currentEntity);
             return entityDto;
         }
 
-        public async Task<bool> DeleteByIdAsync(Guid id)
-        {          
-            BetQuotes betQuote = await _dbContext.BetQuotes.FindAsync(id);
-            if (betQuote == null)
-            {
-                return false;
-            }
-
+        public async Task DeleteByIdAsync(Guid id)
+        {
+            BetQuotes betQuote = await GetByIdVanillaAsync(id);
             _dbContext.BetQuotes.Remove(betQuote);
             await _dbContext.SaveChangesAsync();
-
-            return true;
         }
     }
 }

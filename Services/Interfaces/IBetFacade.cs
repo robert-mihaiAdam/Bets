@@ -12,6 +12,6 @@ namespace Services.Interfaces
 
         Task<BetRequestDto> GetBetByIdAsync(Guid betQuoteId);
 
-        Task<bool> DeleteByIdAsync(Guid betQuoteId);
+        Task DeleteByIdAsync(Guid betQuoteId);
     }
 }
