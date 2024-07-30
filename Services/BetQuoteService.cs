@@ -4,6 +4,7 @@ using Domain.Entities;
 using Domain.Dto.BetQuote;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Domain.ErrorEntities;
 
 namespace Services
 {
@@ -38,7 +39,7 @@ namespace Services
             BetQuotes entity =  await _dbContext.BetQuotes.FirstOrDefaultAsync(bq => bq.BetId == betId);
             if (entity == null)
             {
-                throw new Exception($"Doesn't exists a bet quote for bet with id:{betId}");
+                throw new NotFoundException($"Doesn't exists a bet quote for bet with id:{betId}");
             }
             BetQuoteDto entityDto = _mapper.Map<BetQuoteDto>(entity);
             return entityDto;
@@ -49,7 +50,7 @@ namespace Services
             BetQuotes entity = await _dbContext.BetQuotes.FindAsync(id);
             if (entity == null)
             {
-                throw new Exception($"Bet quote with id: {id} doesn't exists");
+                throw new NotFoundException($"Bet quote with id: {id} doesn't exists");
             }
             return entity;
         }

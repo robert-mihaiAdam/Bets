@@ -4,6 +4,7 @@ using Services;
 using Services.Interfaces;
 using Domain;
 using Services.Facades;
+using BetsApi.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -21,6 +22,8 @@ builder.Services.AddScoped<IPlacedBetsService, PlacedBetsService>();
 builder.Services.AddScoped<IBetFacade, BetFacade>();
 builder.Services.AddScoped<IPlacedBetFacade, PlacedBetFacade>();
 
+builder.Services.AddExceptionHandler<GlobalErrorHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 
@@ -32,6 +35,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseExceptionHandler("/error-development");
 }
 
 app.UseHttpsRedirection();

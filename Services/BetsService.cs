@@ -5,6 +5,7 @@ using Domain.Dto.BetableEntity;
 using Domain.Dto.Bets;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Domain.ErrorEntities;
 
 namespace Services
 {
@@ -32,13 +33,13 @@ namespace Services
             BetableEntityDto home = await _betableEntity.GetByIdAsync(entity.BetableEntityA);
             if (home == null)
             {
-                throw new Exception($"Betable entity with id: {entity.BetableEntityA} doesn't exists");
+                throw new NotFoundException($"Betable entity with id: {entity.BetableEntityA} doesn't exists");
             }
 
             BetableEntityDto away = await _betableEntity.GetByIdAsync(entity.BetableEntityB);
             if (away == null)
             {
-                throw new Exception($"Betable entity with id: {entity.BetableEntityB} doesn't exists");
+                throw new NotFoundException($"Betable entity with id: {entity.BetableEntityB} doesn't exists");
             }
         }
 
@@ -47,7 +48,7 @@ namespace Services
             Bets entity = await _dbContext.Bets.FindAsync(id);
             if (entity == null)
             {
-                throw new Exception($"Bet with id:{id} doesn't exists");
+                throw new NotFoundException($"Bet with id:{id} doesn't exists");
             }
             return entity;
         }
