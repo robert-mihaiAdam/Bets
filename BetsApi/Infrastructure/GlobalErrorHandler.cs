@@ -28,7 +28,7 @@ namespace BetsApi.Infrastructure
 
             ErrorResponse response = new ErrorResponse
             {
-                message = exception.Message
+                Message = exception.Message
             };
             await httpContext.Response.WriteAsJsonAsync(response, cancellationToken);
             return true;
