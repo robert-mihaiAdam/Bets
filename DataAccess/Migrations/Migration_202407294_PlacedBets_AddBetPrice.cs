@@ -3,13 +3,13 @@
 namespace DataAccess.Migrations
 {
     [Migration(202407294)]
-    public class Migration_202407294_Add_PlacedBets : Migration
+    public class Migration_202407294_PlacedBets_AddBetPrice : Migration
     {
         public override void Up()
         {
             Alter.Table("PlacedBets")
                 .AddColumn("BetPrice")
-                .AsInt64()
+                .AsDecimal()
                 .WithDefaultValue(1);
         }
 
