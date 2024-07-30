@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Domain.ErrorEntities;
-using System.Text.Json;
 
 namespace BetsApi.Infrastructure
 {

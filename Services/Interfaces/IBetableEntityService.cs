@@ -15,6 +15,6 @@ namespace Services.Interfaces
 
         Task<BetableEntityDto> UpdateEntityByIdAsync(Guid id, UpdateBetableEntityDto entity);
 
-        Task<bool> DeleteByIdAsync(Guid id);
+        Task DeleteByIdAsync(Guid id);
     }
 }
