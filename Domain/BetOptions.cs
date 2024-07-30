@@ -1,6 +1,6 @@
 ﻿namespace Domain
 {
-    public enum BetOptions : int
+    public enum BetOptions
     {
         A = 0,
         B = 1,

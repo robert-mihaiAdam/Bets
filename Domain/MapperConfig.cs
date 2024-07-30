@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Domain.Dto;
+using Domain.Dto.PlacedBet;
 using Domain.Dto.BetableEntity;
 using Domain.Dto.BetQuote;
 using Domain.Dto.BetRequest;
@@ -36,7 +36,10 @@ namespace Domain
             CreateMap<UpdateBetRequestDto, UpdateBetsDto>();
             CreateMap<UpdateBetRequestDto, UpdateBetQuotesDto>();
 
+            CreateMap<CreatePlacedBetDto, PlacedBets>();
             CreateMap<PlacedBets, PlacedBetsDto>();
+            CreateMap<UpdatePlacedBetDto, PlacedBets>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         } 
     }
 }

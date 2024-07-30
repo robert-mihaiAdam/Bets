@@ -4,6 +4,7 @@ using Domain.Dto.Bets;
 using AutoMapper;
 using Services.Interfaces;
 using Domain.Entities;
+using Domain.Dto.PlacedBet;
 
 namespace Services.Facades
 {
@@ -67,15 +68,15 @@ namespace Services.Facades
 
         public async Task<IEnumerable<BetRequestDto>> GetAllBetsAsync()
         {
-            IQueryable<BetQuotes> betQuotesEntities = _betQuoteService.GetAllAsync();
-            IQueryable<Bets> betDtoEntities = _betService.GetAllAsync();
+            IQueryable<BetQuotes> betQuotesEntities = _betQuoteService.GetAll();
+            IQueryable<Bets> betDtoEntities = _betService.GetAll();
             var query = betQuotesEntities.Join(betDtoEntities,
                                                 betQuote => betQuote.BetId,
                                                 bet => bet.Id,
                                                 (betQuote, bet) => new BetRequestDto
                                                 {
-                                                  bet = _mapper.Map<BetsDto>(bet),
-                                                  betQuote = _mapper.Map<BetQuoteDto>(betQuote),
+                                                    bet = _mapper.Map<BetsDto>(bet),
+                                                    betQuote = _mapper.Map<BetQuoteDto>(betQuote),
                                                 });
             return query.ToList();
         }

@@ -27,6 +27,11 @@ namespace Services
             return newBetableEntityDto;
         }
 
+        public IQueryable<BetableEntity> GetAll()
+        {
+            return _dbContext.BetableEntity.AsQueryable();
+        }
+
         public async Task<IEnumerable<BetableEntityDto>> GetAllAsync()
         {
             IEnumerable<BetableEntity> betableEntities = await _dbContext.BetableEntity.ToListAsync();

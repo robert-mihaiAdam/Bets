@@ -1,4 +1,5 @@
-﻿using Domain.Dto.BetQuote;
+﻿using Domain;
+using Domain.Dto.BetQuote;
 using Domain.Entities;
 
 namespace Services.Interfaces
@@ -7,7 +8,7 @@ namespace Services.Interfaces
     {
         Task<BetQuoteDto> CreateAsync(CreateBetQuotesDto entity, Guid betId);
 
-        IQueryable<BetQuotes> GetAllAsync();
+        IQueryable<BetQuotes> GetAll();
 
         Task<BetQuoteDto> GetByIdAsync(Guid id);
 

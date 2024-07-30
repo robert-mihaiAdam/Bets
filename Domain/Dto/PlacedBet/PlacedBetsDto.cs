@@ -1,6 +1,9 @@
-﻿namespace Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Domain.Dto.PlacedBet
+
 {
-    public class PlacedBets
+    public class PlacedBetsDto
     {
         public Guid Id { get; set; }
 

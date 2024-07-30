@@ -3,7 +3,6 @@ using DataAccess;
 using Domain.Entities;
 using Domain.Dto.BetQuote;
 using AutoMapper;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace Services
@@ -29,7 +28,7 @@ namespace Services
             return newBetQuoteDto;
         }
 
-        public IQueryable<BetQuotes> GetAllAsync()
+        public IQueryable<BetQuotes> GetAll()
         {
             return _dbContext.BetQuotes.AsQueryable();
         }
@@ -47,6 +46,7 @@ namespace Services
             BetQuoteDto entityDto = _mapper.Map<BetQuoteDto>(entity);
             return entityDto;
         }
+
 
         public async Task<BetQuoteDto> UpdateById(Guid id, UpdateBetQuotesDto newEntity)
         {

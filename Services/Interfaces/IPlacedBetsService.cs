@@ -1,16 +1,18 @@
 ﻿using Domain.Entities;
-using Domain.Command;
+using Domain.Dto.PlacedBet;
 
 namespace Services.Interfaces
 {
     public interface IPlacedBetsService
     {
-        Task<PlacedBets> CreateAsync(PlacedBets entity);
+        Task<PlacedBetsDto> CreateAsync(CreatePlacedBetDto entity);
 
-        Task<IEnumerable<PlacedBets>> GetAllAsync();
+        IQueryable<PlacedBets> GetAll();
 
-        Task<PlacedBets> GetByIdAsync(Guid id);
+        Task<PlacedBetsDto> GetByIdAsync(Guid id);
 
-        Task<PlacedBets> UpdateAsync(Guid id, UpdatePlacedBets entity);
+        Task<PlacedBetsDto> UpdateByIdAsync(Guid id, UpdatePlacedBetDto entity);
+
+        Task<bool> DeletePlacedBetByIdAsync(Guid id);
     }
 }
