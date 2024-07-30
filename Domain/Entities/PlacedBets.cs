@@ -8,7 +8,7 @@
 
         public DateTime PlacedDate { get; set; }
 
-        public long BetPrice { get; set; }
+        public decimal BetPrice { get; set; }
 
         public BetOptions Type { get; set; }
 
