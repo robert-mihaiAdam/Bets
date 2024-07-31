@@ -32,8 +32,8 @@ namespace Services.Facades
             try
             {
                 BetsDto createdBet = await _betService.CreateAsync(newBets);
-                 BetQuoteDto createdBetQuote = await _betQuoteService.CreateAsync(newBetQuote, createdBet.Id);
-                   transaction.Commit();
+                BetQuoteDto createdBetQuote = await _betQuoteService.CreateAsync(newBetQuote, createdBet.Id);
+                transaction.Commit();
                 return new BetRequestDto { bet = createdBet, betQuote = createdBetQuote };
             }
             catch (Exception ex)
@@ -52,12 +52,6 @@ namespace Services.Facades
             try
             {
                 BetQuoteDto currentBetQuote = await _betQuoteService.GetByBetIdAsync(betId);
-                if (currentBetQuote == null)
-                {
-                    transaction.Rollback();
-                    return null;
-                }
-
                 BetQuoteDto newBetQuote = await _betQuoteService.UpdateById(currentBetQuote.Id, updatedBetQuote);
                 BetsDto newBetDto = await _betService.UpdateById(betId, updatedBets);
                 transaction.Commit();
