@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using DataAccess;
+using Domain;
 using Domain.Dto.BetableEntity;
 using Domain.Dto.BetQuote;
 using Domain.Dto.Bets;
@@ -18,18 +20,22 @@ namespace Services.Facades
         private readonly IBetsService _betService;
         private readonly IBetableEntityService _betableEntityService;
         private readonly IMapper _mapper;
+        private readonly DBContext _dbContext;
+
 
         public PlacedBetFacade(IPlacedBetsService placedBetsService,
                                IBetQuoteService betQuoteService,
                                IBetsService betsService,
                                IBetableEntityService betableService,
-                               IMapper mapper) 
+                               IMapper mapper,
+                               DBContext dBContext) 
         {
             _placedBetsService = placedBetsService;
             _betQuoteService = betQuoteService;
             _betService = betsService;
             _betableEntityService = betableService;
             _mapper = mapper;
+            _dbContext = dBContext;
         }
 
           public async Task<PlacedBetsDto> CreatePlacedBetAsync(CreatePlacedBetDto newPlacedBet)
@@ -90,7 +96,9 @@ namespace Services.Facades
 
         public async Task<PlacedBetsDto> UpdatePlacedBetByIdAsync(Guid id, UpdatePlacedBetDto updatePlacedBet)
         {
+            using var transaction = _dbContext.Database.BeginTransaction();
             PlacedBetsDto updatedPlacedBetDto = await _placedBetsService.UpdateByIdAsync(id, updatePlacedBet);
+            transaction.Commit();
             return updatedPlacedBetDto;
         }
 
