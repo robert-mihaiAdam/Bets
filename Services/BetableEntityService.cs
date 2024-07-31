@@ -60,20 +60,14 @@ namespace Services
         public async Task<BetableEntityDto> UpdateEntityByIdAsync(Guid id, UpdateBetableEntityDto newEntity)
         {
             using var transaction = _dbContext.Database.BeginTransaction();
-            try
-            {
-                BetableEntity currentEntity = await _dbContext.BetableEntity.FindAsync(id);
-                _mapper.Map(newEntity, currentEntity);
-                await _dbContext.SaveChangesAsync();
-                transaction.Commit();
-                BetableEntityDto entityDto = _mapper.Map<BetableEntityDto>(currentEntity);
-                return entityDto;
-            }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-                throw ex;
-            }
+            
+            BetableEntity currentEntity = await _dbContext.BetableEntity.FindAsync(id);
+            _mapper.Map(newEntity, currentEntity);
+            await _dbContext.SaveChangesAsync();
+            
+            transaction.Commit();
+            BetableEntityDto entityDto = _mapper.Map<BetableEntityDto>(currentEntity);
+            return entityDto;
         }
 
 

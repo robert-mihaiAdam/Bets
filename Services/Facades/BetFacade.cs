@@ -29,18 +29,13 @@ namespace Services.Facades
             CreateBetsDto newBets = _mapper.Map<CreateBetsDto>(newFullBet);
 
             using var transaction = _dbContext.Database.BeginTransaction();
-            try
-            {
-                BetsDto createdBet = await _betService.CreateAsync(newBets);
-                BetQuoteDto createdBetQuote = await _betQuoteService.CreateAsync(newBetQuote, createdBet.Id);
-                transaction.Commit();
-                return new BetRequestDto { bet = createdBet, betQuote = createdBetQuote };
-            }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-                throw ex;
-            }
+            
+            BetsDto createdBet = await _betService.CreateAsync(newBets);
+            BetQuoteDto createdBetQuote = await _betQuoteService.CreateAsync(newBetQuote, createdBet.Id);
+            
+            transaction.Commit();
+           
+            return new BetRequestDto { bet = createdBet, betQuote = createdBetQuote };
         }
 
         public async Task<BetRequestDto> UpdateBetAsync(Guid betId, UpdateBetRequestDto updatedFullBet)
@@ -49,21 +44,15 @@ namespace Services.Facades
             UpdateBetsDto updatedBets = _mapper.Map<UpdateBetsDto>(updatedFullBet);
 
             using var transaction = _dbContext.Database.BeginTransaction();
-            try
-            {
-                BetQuoteDto currentBetQuote = await _betQuoteService.GetByBetIdAsync(betId);
-                BetQuoteDto newBetQuote = await _betQuoteService.UpdateById(currentBetQuote.Id, updatedBetQuote);
-                BetsDto newBetDto = await _betService.UpdateById(betId, updatedBets);
-                transaction.Commit();
-                BetRequestDto newFullBet = new BetRequestDto { bet = newBetDto, betQuote = newBetQuote };
-                return newFullBet;
-            }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-                throw ex;
-            }
-
+            
+            BetQuoteDto currentBetQuote = await _betQuoteService.GetByBetIdAsync(betId);
+            BetQuoteDto newBetQuote = await _betQuoteService.UpdateById(currentBetQuote.Id, updatedBetQuote);
+            BetsDto newBetDto = await _betService.UpdateById(betId, updatedBets);
+            
+            transaction.Commit();
+           
+            BetRequestDto newFullBet = new BetRequestDto { bet = newBetDto, betQuote = newBetQuote };
+            return newFullBet;
         }
 
         public async Task<IEnumerable<BetRequestDto>> GetAllBetsAsync()

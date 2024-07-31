@@ -97,16 +97,9 @@ namespace Services.Facades
         public async Task<PlacedBetsDto> UpdatePlacedBetByIdAsync(Guid id, UpdatePlacedBetDto updatePlacedBet)
         {
             using var transaction = _dbContext.Database.BeginTransaction();
-            try
-            {
-                PlacedBetsDto updatedPlacedBetDto = await _placedBetsService.UpdateByIdAsync(id, updatePlacedBet);
-                return updatedPlacedBetDto;
-            }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-                throw ex;
-            }
+            PlacedBetsDto updatedPlacedBetDto = await _placedBetsService.UpdateByIdAsync(id, updatePlacedBet);
+            transaction.Commit();
+            return updatedPlacedBetDto;
         }
 
         public async Task DeletePlacedBetByIdAsync(Guid id)
