@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Domain.Dto.PlacedBet
+﻿namespace Domain.Dto.PlacedBet
 
 {
     public class PlacedBetsDto
@@ -11,7 +9,7 @@ namespace Domain.Dto.PlacedBet
 
         public DateTime PlacedDate { get; set; }
 
-        public long BetPrice { get; set; }
+        public decimal BetPrice { get; set; }
 
         public BetOptions Type { get; set; }
 

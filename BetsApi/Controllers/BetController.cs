@@ -26,11 +26,6 @@ namespace BetsApi.Controllers
         public async Task<IActionResult> GetBetByIdAsync(Guid id)
         {
             BetRequestDto entity = await _betFacade.GetBetByIdAsync(id);
-            if (entity == null)
-            {
-                return NotFound();
-            }
-
             return Ok(entity);
         }
 
@@ -51,11 +46,7 @@ namespace BetsApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteByIdAsync(Guid id)
         {
-            bool checkRemove = await _betFacade.DeleteByIdAsync(id);
-            if(!checkRemove)
-            {
-                return NotFound($"Bet Quote with id: {id} doesn't exists");
-            }
+            await _betFacade.DeleteByIdAsync(id);
             return Ok();
         }
     }

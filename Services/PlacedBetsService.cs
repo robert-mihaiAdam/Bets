@@ -1,10 +1,9 @@
 ﻿using Services.Interfaces;
 using DataAccess;
-using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
-using Domain.Dto.BetQuote;
 using Domain.Dto.PlacedBet;
 using AutoMapper;
+using Domain.ErrorEntities;
 
 namespace Services
 {
@@ -26,7 +25,6 @@ namespace Services
             PlacedBets newPlacedBets = _mapper.Map<PlacedBets>(newEntity);
             newPlacedBets.PlacedDate = _timeProvider.GetUtcNow().DateTime;
             newPlacedBets.UserId = new Guid();
-
             _dbContext.PlacedBets.Add(newPlacedBets);
             await _dbContext.SaveChangesAsync();
             PlacedBetsDto placedBetsDto = _mapper.Map<PlacedBetsDto>(newPlacedBets); 
@@ -45,15 +43,19 @@ namespace Services
             return currentPlacedBetDto;
         }
 
+        private async Task<PlacedBets> GetByIdVanillaAsync(Guid id)
+        {
+            PlacedBets entity = await _dbContext.PlacedBets.FindAsync(id);
+            if (entity == null)
+            {
+                throw new NotFoundException($"Doesn't exists any placed bet with id:{id}");
+            }
+            return entity;
+        }
+
         public async Task<PlacedBetsDto> UpdateByIdAsync(Guid id, UpdatePlacedBetDto newEntity)
         {
-            PlacedBets currentBet = await _dbContext.PlacedBets.FindAsync(id);
-            if (currentBet == null)
-            {
-                return null;
-            }
-
-         
+            PlacedBets currentBet = await GetByIdVanillaAsync(id);
             _mapper.Map(newEntity, currentBet);
             currentBet.PlacedDate = _timeProvider.GetUtcNow().DateTime;
             await _dbContext.SaveChangesAsync();
@@ -61,17 +63,11 @@ namespace Services
             return updatedPlacedBet;
         }
 
-        public async Task<bool> DeletePlacedBetByIdAsync(Guid id)
+        public async Task DeletePlacedBetByIdAsync(Guid id)
         {
-            PlacedBets currentPlacedBet = await _dbContext.PlacedBets.FindAsync(id);
-            if (currentPlacedBet == null)
-            {
-                return false;
-            }
-
+            PlacedBets currentPlacedBet = await GetByIdVanillaAsync(id);
             _dbContext.PlacedBets.Remove(currentPlacedBet);
             await _dbContext.SaveChangesAsync();
-            return true;
         }
     }
 }

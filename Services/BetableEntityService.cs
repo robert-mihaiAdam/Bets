@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
 using AutoMapper;
 using Domain.Dto.BetableEntity;
+using Domain.ErrorEntities;
 
 namespace Services
 {
@@ -39,26 +40,26 @@ namespace Services
             return dtoEntities;
         }
 
-        public async Task<BetableEntityDto> GetByIdAsync(Guid id)
+        private async Task<BetableEntity> GetByIdVanillaAsync(Guid id)
         {
             BetableEntity betableEntity = await _dbContext.BetableEntity.FindAsync(id);
             if (betableEntity == null)
             {
-                return null;
+                throw new NotFoundException($"Bet Entity with id:{id} doesn't exist");
             }
+            return betableEntity;
+        }
 
+        public async Task<BetableEntityDto> GetByIdAsync(Guid id)
+        {
+            BetableEntity betableEntity = await GetByIdVanillaAsync(id);
             BetableEntityDto betableEntityDto = _mapper.Map<BetableEntityDto>(betableEntity);
             return betableEntityDto;
         }
 
         public async Task<BetableEntityDto> UpdateEntityByIdAsync(Guid id, UpdateBetableEntityDto newEntity)
         {
-            BetableEntity currentEntity = await _dbContext.BetableEntity.FindAsync(id);
-            if (currentEntity == null)
-            {
-                return null;
-            }
-
+            BetableEntity currentEntity = await GetByIdVanillaAsync(id);
             _mapper.Map(newEntity, currentEntity);
             await _dbContext.SaveChangesAsync();
             BetableEntityDto entityDto = _mapper.Map<BetableEntityDto>(currentEntity);
@@ -66,17 +67,11 @@ namespace Services
         }
 
 
-        public async Task<bool> DeleteByIdAsync(Guid id)
+        public async Task DeleteByIdAsync(Guid id)
         {
-            BetableEntity item = await _dbContext.BetableEntity.FindAsync(id);
-            if (item == null)
-            {
-                return false;
-            }
-
+            BetableEntity item = await GetByIdVanillaAsync(id);
             _dbContext.BetableEntity.Remove(item);
             await _dbContext.SaveChangesAsync();
-            return true;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Domain;
 using Domain.Dto.BetableEntity;
 using Domain.Dto.BetQuote;
 using Domain.Dto.Bets;
@@ -8,6 +7,7 @@ using Domain.Dto.PlacedBet;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Services.Interfaces;
+using Domain.ErrorEntities;
 
 namespace Services.Facades
 {
@@ -32,22 +32,12 @@ namespace Services.Facades
             _mapper = mapper;
         }
 
-        private bool ValidateType(BetOptions type)
+          public async Task<PlacedBetsDto> CreatePlacedBetAsync(CreatePlacedBetDto newPlacedBet)
         {
-            return Enum.IsDefined(typeof(BetOptions),type);
-        }
-
-        public async Task<PlacedBetsDto> CreatePlacedBetAsync(CreatePlacedBetDto newPlacedBet)
-        {
-            if (!ValidateType(newPlacedBet.Type))
-            {
-                return null;
-            }
-
             Guid quoteId = newPlacedBet.QuoteId;
             BetQuoteDto currentQuote = await _betQuoteService.GetByIdAsync(quoteId);
             if (currentQuote == null)
-                return null;
+                throw new NotFoundException($"Doesn't exists a bet quote for bet with id:{quoteId}");
 
             PlacedBetsDto newPlacedBetsDto = await _placedBetsService.CreateAsync(newPlacedBet);
             return newPlacedBetsDto;
@@ -100,18 +90,13 @@ namespace Services.Facades
 
         public async Task<PlacedBetsDto> UpdatePlacedBetByIdAsync(Guid id, UpdatePlacedBetDto updatePlacedBet)
         {
-            if (!ValidateType(updatePlacedBet.Type))
-            {
-                return null;
-            }
-
             PlacedBetsDto updatedPlacedBetDto = await _placedBetsService.UpdateByIdAsync(id, updatePlacedBet);
             return updatedPlacedBetDto;
         }
 
-        public async Task<bool> DeletePlacedBetByIdAsync(Guid id)
+        public async Task DeletePlacedBetByIdAsync(Guid id)
         {
-            return await _placedBetsService.DeletePlacedBetByIdAsync(id);
+            await _placedBetsService.DeletePlacedBetByIdAsync(id);
         }
     }
 }

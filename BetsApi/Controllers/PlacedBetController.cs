@@ -20,12 +20,7 @@ namespace BetsApi.Controllers
         public async Task<IActionResult> AddPlacedBetAsync(CreatePlacedBetDto newPlacedBetBody)
         {
             PlacedBetsDto newPlacedBetDto = await _placedBetFacade.CreatePlacedBetAsync(newPlacedBetBody);
-            if (newPlacedBetDto == null)
-            {
-                return BadRequest();
-            }
-
-            return Ok();
+            return Ok(newPlacedBetDto);
         }
 
         [HttpGet("{id}")]
@@ -52,11 +47,7 @@ namespace BetsApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlacedBetByIdAsync(Guid id)
         {
-            bool checkPlacedBetWasDeleted = await _placedBetFacade.DeletePlacedBetByIdAsync(id);
-            if(!checkPlacedBetWasDeleted)
-            {
-                return BadRequest();
-            }
+            await _placedBetFacade.DeletePlacedBetByIdAsync(id);
             return Ok();
         }
     }
