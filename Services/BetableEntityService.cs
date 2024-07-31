@@ -61,7 +61,7 @@ namespace Services
         {
             using var transaction = _dbContext.Database.BeginTransaction();
             
-            BetableEntity currentEntity = await _dbContext.BetableEntity.FindAsync(id);
+            BetableEntity currentEntity = await GetByIdVanillaAsync(id);
             _mapper.Map(newEntity, currentEntity);
             await _dbContext.SaveChangesAsync();
             
