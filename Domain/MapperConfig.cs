@@ -19,14 +19,15 @@ namespace Domain
 
             CreateMap<CreateBetQuotesDto, BetQuotes>();
             CreateMap<BetQuotes, BetQuoteDto>();
+            CreateMap<BetQuoteDto, UpdateBetQuotesDto>();
             CreateMap<UpdateBetQuotesDto, BetQuotes>()
                     .ForMember(dest => dest.Id, opt => opt.Ignore())
                     .ForMember(dest => dest.BetId, opt => opt.Ignore());
-            
 
             CreateMap<CreateBetsDto, Bets>();
             CreateMap<Bets, BetsDto>();
             CreateMap<UpdateBetsDto, CreateBetsDto>();
+            CreateMap<BetsDto, UpdateBetsDto>();
             CreateMap<UpdateBetsDto, Bets>()
                     .ForMember(dest => dest.Id, opt => opt.Ignore());
 
@@ -38,6 +39,7 @@ namespace Domain
 
             CreateMap<CreatePlacedBetDto, PlacedBets>();
             CreateMap<PlacedBets, PlacedBetsDto>();
+            CreateMap<PlacedBetsDto, UpdatePlacedBetDto>();
             CreateMap<UpdatePlacedBetDto, PlacedBets>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         } 

@@ -39,6 +39,10 @@ namespace Services
         public async Task<PlacedBetsDto> GetByIdAsync(Guid id)
         {
             PlacedBets currentPlacedBet = await _dbContext.PlacedBets.FindAsync(id);
+            if (currentPlacedBet == null)
+            {
+                throw new NotFoundException($"Doesn't exists any placed bet with id:{id}");
+            }
             PlacedBetsDto currentPlacedBetDto = _mapper.Map<PlacedBetsDto>(currentPlacedBet);
             return currentPlacedBetDto;
         }
