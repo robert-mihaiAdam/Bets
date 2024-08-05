@@ -65,7 +65,7 @@ namespace UnitTesting.BetsUnitTests
 
         [Fact]
         [TestPriority(2)]
-        public async Task CreatePlacedBetAndGetById()
+        public async Task GetById()
         {
             PlacedBetsDto placedBet = _sharedFixture.placedBets;
             PlacedBetsDto findPlacedBet = null;
@@ -80,7 +80,7 @@ namespace UnitTesting.BetsUnitTests
 
         [Fact]
         [TestPriority(3)]
-        public async Task CreatePlacedBetAndUpdate()
+        public async Task UpdatePlacedBetById()
         {
             PlacedBetsDto placedBet = _sharedFixture.placedBets;
             IEnumerable<BetQuotes> entitiesQuotes = _sharedFixture.quotes;
@@ -106,7 +106,7 @@ namespace UnitTesting.BetsUnitTests
 
         [Fact]
         [TestPriority(4)]
-        public async Task CreatedPlaceBetAndDelete()
+        public async Task DeletePlacedBetById()
         {
             PlacedBetsDto placedBet = _sharedFixture.placedBets;
             Func<Task> deleteAct = async () =>

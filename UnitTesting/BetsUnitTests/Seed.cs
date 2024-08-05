@@ -19,7 +19,6 @@ namespace UnitTesting.BetsUnitTests
         private readonly IBetQuoteService _betQuoteService;
         private readonly IBetsService _betsService;
         private List<Guid> entitiesId;
-        private ITestOutputHelper output = null;
 
         public Seed(DependencyInjectionFixture fixture)
         {

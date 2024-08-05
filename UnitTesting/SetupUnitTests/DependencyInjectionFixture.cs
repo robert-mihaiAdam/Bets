@@ -17,7 +17,7 @@ namespace UnitTesting.SetupUnitTests
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
             ServiceProvider = serviceCollection.BuildServiceProvider();
-            Seed();
+            MigrateTable();
         }
 
         private void ConfigureServices(IServiceCollection services)
@@ -34,7 +34,7 @@ namespace UnitTesting.SetupUnitTests
             services.AddAutoMapper(typeof(MapperConfig).Assembly);
         }
 
-        public async Task Seed()
+        public async Task MigrateTable()
         {
             var serviceScope = ServiceProvider.CreateScope();
             var context = serviceScope.ServiceProvider.GetRequiredService<DbDatabaseCreation>();
@@ -46,7 +46,7 @@ namespace UnitTesting.SetupUnitTests
         {
             var scope = ServiceProvider.CreateScope();
             var context = scope.ServiceProvider.GetService<DbDatabaseCreation>();
-            //await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureDeletedAsync();
         }
     }
 }
