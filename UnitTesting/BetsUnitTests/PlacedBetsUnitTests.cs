@@ -5,13 +5,17 @@ using Domain.Entities;
 using Domain.ErrorEntities;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using Services;
 using Services.Interfaces;
+using UnitTesting.Helpers;
+using UnitTesting.SetupUnitTests;
 using Xunit.Abstractions;
+using UnitTesting.Scheduler;
 
-namespace UnitTesting.PlacedBets
+namespace UnitTesting.BetsUnitTests
 {
-    public class PlacedBetsUnitTests : IClassFixture<DependencyInjectionFixture>
+    [TestCaseOrderer("UnitTesting.Scheduler.PriorityOrderer", "UnitTesting")]
+    [Collection("Bets Unit Tests")]
+    public class PlacedBetsUnitTests
     {
         private readonly ITestOutputHelper _output;
         private readonly IBetableEntityService _entityService;
@@ -19,21 +23,27 @@ namespace UnitTesting.PlacedBets
         private readonly IBetQuoteService _betsQuoteService;
         private readonly IPlacedBetsService _placedBetsService;
         private readonly IMapper _mapper;
-        private static Random random;
+        private Random random;
+        private SharedFixture _sharedFixture;
 
-        public PlacedBetsUnitTests(ITestOutputHelper output, DependencyInjectionFixture fixture)
+        public PlacedBetsUnitTests(ITestOutputHelper output, SharedFixture sharedFixture)
         {
             _output = output;
+            _sharedFixture = sharedFixture;
+            DependencyInjectionFixture fixture = sharedFixture.dependencyInjection;
             _betsQuoteService = fixture.ServiceProvider.GetService<IBetQuoteService>();
             _placedBetsService = fixture.ServiceProvider.GetService<IPlacedBetsService>();
+            _mapper = fixture.ServiceProvider.GetRequiredService<IMapper>();
             random = new Random();
         }
 
-        private async Task<PlacedBetsDto> CreatePlacedBetAsync()
+        [Fact]
+        [TestPriority(1)]
+        public async Task CreatedPlacedBet()
         {
-            IEnumerable<BetQuotes> entitiesQuotes = _betsQuoteService.GetAll().ToList();
+            IEnumerable<BetQuotes> entitiesQuotes = _sharedFixture.quotes;
             int noEntities = entitiesQuotes.Count();
-            PlacedBetsDto placedBet= null;
+            PlacedBetsDto placedBet = null;
             CreatePlacedBetDto newPlacedBet = new CreatePlacedBetDto
             {
                 Type = Constants.GetRandomEnumValue<BetOptions>(),
@@ -43,42 +53,37 @@ namespace UnitTesting.PlacedBets
 
             Func<Task> act = async () =>
             {
-               placedBet = await _placedBetsService.CreateAsync(newPlacedBet);
+                placedBet = await _placedBetsService.CreateAsync(newPlacedBet);
             };
 
             await act.Should().NotThrowAsync();
-            return placedBet;
-        }
-
-
-        [Fact]
-        public async Task CreatedPlacedBet()
-        {
-            PlacedBetsDto placedBet = await CreatePlacedBetAsync();
             placedBet.Should().NotBeNull("Bet Entity should be created successfully");
             placedBet.Id.Should().NotBe(Guid.Empty, because: "Returned bet entity has id empty");
+
+            _sharedFixture.placedBets = placedBet;
         }
 
         [Fact]
+        [TestPriority(2)]
         public async Task CreatePlacedBetAndGetById()
         {
-            PlacedBetsDto placedBet = await CreatePlacedBetAsync();
-            PlacedBetsDto findPlacedBet= null;
+            PlacedBetsDto placedBet = _sharedFixture.placedBets;
+            PlacedBetsDto findPlacedBet = null;
             Func<Task> act = async () =>
             {
                 findPlacedBet = await _placedBetsService.GetByIdAsync(placedBet.Id);
             };
 
             await act.Should().NotThrowAsync();
-            Constants.CompareFields(placedBet, findPlacedBet).Should().BeTrue(because: "Entities should be the same");
+            placedBet.Should().BeEquivalentTo(findPlacedBet, because: "Entities should be the same");
         }
 
         [Fact]
+        [TestPriority(3)]
         public async Task CreatePlacedBetAndUpdate()
         {
-            PlacedBetsDto placedBet = await CreatePlacedBetAsync();
-
-            IEnumerable<BetQuotes> entitiesQuotes = _betsQuoteService.GetAll().ToList();
+            PlacedBetsDto placedBet = _sharedFixture.placedBets;
+            IEnumerable<BetQuotes> entitiesQuotes = _sharedFixture.quotes;
             int noEntities = entitiesQuotes.Count();
             PlacedBetsDto updatedPlacedBet = null;
             UpdatePlacedBetDto mappedUpldatedPlacedBet = new UpdatePlacedBetDto();
@@ -88,6 +93,7 @@ namespace UnitTesting.PlacedBets
                 BetPrice = Constants.GetRandomDecimal(1.00m, 1000.00m)
             };
 
+            _output.WriteLine($"{placedBet.Id}");
             Func<Task> updateAct = async () =>
             {
                 updatedPlacedBet = await _placedBetsService.UpdateByIdAsync(placedBet.Id, newPlacedBet);
@@ -95,13 +101,14 @@ namespace UnitTesting.PlacedBets
             };
             await updateAct.Should().NotThrowAsync();
             placedBet.Id.Should().Be(updatedPlacedBet.Id);
-            Constants.CompareFields<UpdatePlacedBetDto>(mappedUpldatedPlacedBet, newPlacedBet).Should().BeTrue(because: "After update, entity should change values from fields");
+            mappedUpldatedPlacedBet.Should().BeEquivalentTo(newPlacedBet, because: "After update, entity should change values from fields");
         }
 
         [Fact]
+        [TestPriority(4)]
         public async Task CreatedPlaceBetAndDelete()
         {
-            PlacedBetsDto placedBet = await CreatePlacedBetAsync();
+            PlacedBetsDto placedBet = _sharedFixture.placedBets;
             Func<Task> deleteAct = async () =>
             {
                 await _placedBetsService.DeletePlacedBetByIdAsync(placedBet.Id);

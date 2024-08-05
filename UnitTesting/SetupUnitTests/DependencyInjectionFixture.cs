@@ -5,18 +5,19 @@ using Services.Interfaces;
 using Services;
 using Domain;
 
-namespace UnitTesting
+namespace UnitTesting.SetupUnitTests
 {
     public class DependencyInjectionFixture
     {
         public ServiceProvider ServiceProvider { get; private set; }
-        private string connectionString = "Server=localhost;Database=DotNetCourseDatabase;TrustServerCertificate=true;Trusted_Connection=true;";
+        private string connectionString = "Server=localhost;Database=TestDatabase;TrustServerCertificate=true;Trusted_Connection=true;";
 
         public DependencyInjectionFixture()
         {
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
             ServiceProvider = serviceCollection.BuildServiceProvider();
+            Seed();
         }
 
         private void ConfigureServices(IServiceCollection services)
@@ -28,9 +29,24 @@ namespace UnitTesting
             services.AddScoped<IBetsService, BetsService>();
             services.AddScoped<IPlacedBetsService, PlacedBetsService>();
 
-            services.AddSingleton<TimeProvider>(TimeProvider.System);
+            services.AddSingleton(TimeProvider.System);
 
             services.AddAutoMapper(typeof(MapperConfig).Assembly);
+        }
+
+        public async Task Seed()
+        {
+            var serviceScope = ServiceProvider.CreateScope();
+            var context = serviceScope.ServiceProvider.GetRequiredService<DbDatabaseCreation>();
+            context.Database.EnsureCreated();
+            DatabaseMigrator.MigrateDb(connectionString);
+        }
+
+        public async Task DisposeAsync()
+        {
+            var scope = ServiceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetService<DbDatabaseCreation>();
+            //await context.Database.EnsureDeletedAsync();
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using DataAccess;
-using Domain;
 using Domain.Dto.BetableEntity;
 using Domain.Dto.BetQuote;
 using Domain.Dto.BetRequest;
@@ -9,31 +7,43 @@ using Domain.ErrorEntities;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Interfaces;
+using UnitTesting.Helpers;
+using UnitTesting.SetupUnitTests;
 using Xunit.Abstractions;
+using UnitTesting.Scheduler;
 
-namespace UnitTesting.Bets
+namespace UnitTesting.BetsUnitTests
 {
-    public class BetsUnitTests : IClassFixture<DependencyInjectionFixture>
+    [TestCaseOrderer("UnitTesting.Scheduler.PriorityOrderer", "UnitTesting")]
+    [Collection("Bets Unit Tests")]
+    public class BetsUnitTests
     {
         private readonly ITestOutputHelper _output;
         private readonly IBetableEntityService _entityService;
         private readonly IBetsService _betsService;
         private readonly IBetQuoteService _betsQuoteService;
         private readonly IMapper _mapper;
-        private static Random random;
+        private Random random;
+        private SharedFixture _sharedFixture;
 
-        public BetsUnitTests(ITestOutputHelper output, DependencyInjectionFixture fixture)
+        public BetsUnitTests(ITestOutputHelper output, SharedFixture sharedFixture)
         {
             _output = output;
-            _entityService = fixture.ServiceProvider.GetService<IBetableEntityService>();
-            _betsService = fixture.ServiceProvider.GetService<IBetsService>();
-            _betsQuoteService = fixture.ServiceProvider.GetService<IBetQuoteService>();
+            _sharedFixture = sharedFixture;
+            DependencyInjectionFixture dependencyInjectionFixture = sharedFixture.dependencyInjection;
+            _entityService = dependencyInjectionFixture.ServiceProvider.GetService<IBetableEntityService>();
+            _betsService = dependencyInjectionFixture.ServiceProvider.GetService<IBetsService>();
+            _betsQuoteService = dependencyInjectionFixture.ServiceProvider.GetService<IBetQuoteService>();
+            _mapper = dependencyInjectionFixture.ServiceProvider.GetRequiredService<IMapper>();
             random = new Random();
         }
 
-        private async Task<BetRequestDto> CreateFullBetAsync()
+
+        [Fact]
+        [TestPriority(1)]
+        public async Task CreateFullBet()
         {
-            IEnumerable<BetableEntityDto> entities = await _entityService.GetAllAsync();
+            IEnumerable<BetableEntityDto> entities = _sharedFixture.entities;
             int noElements = entities.Count();
             BetQuoteDto betQuoteDto = null;
             BetsDto betsDto = null;
@@ -57,27 +67,22 @@ namespace UnitTesting.Bets
             };
 
             await act.Should().NotThrowAsync();
-            return new BetRequestDto { bet = betsDto, betQuote = betQuoteDto };
-        }
 
+            BetRequestDto fullBet = new BetRequestDto { bet = betsDto, betQuote = betQuoteDto };
 
-        [Fact]
-        public async Task CreateFullBet()
-        {
-            BetRequestDto fullBet = await CreateFullBetAsync();
-            BetsDto bets = fullBet.bet;
-            BetQuoteDto betQuote = fullBet.betQuote;
+            betsDto.Should().NotBeNull("Bet Entity should be created successfully");
+            betQuoteDto.Should().NotBeNull("Bet Quote should be created successfully");
+            betsDto.Id.Should().NotBe(Guid.Empty, because: "Returned bet entity has id empty");
+            betQuoteDto.Id.Should().NotBe(Guid.Empty, because: "Returned quote entity has id empty");
 
-            bets.Should().NotBeNull("Bet Entity should be created successfully");
-            betQuote.Should().NotBeNull("Bet Quote should be created successfully");
-            bets.Id.Should().NotBe(Guid.Empty, because: "Returned bet entity has id empty");
-            betQuote.Id.Should().NotBe(Guid.Empty, because: "Returned quote entity has id empty");
+            _sharedFixture.fullBet = fullBet;
         }
 
         [Fact]
-        public async Task CreateFullBetAndGetById()
+        [TestPriority(2)]
+        public async Task GetById()
         {
-            BetRequestDto fullBet = await CreateFullBetAsync();
+            BetRequestDto fullBet = _sharedFixture.fullBet;
             BetsDto bets = fullBet.bet, getBet = null;
             BetQuoteDto betQuote = fullBet.betQuote, getBetQuote = null;
 
@@ -88,19 +93,20 @@ namespace UnitTesting.Bets
             };
 
             await act.Should().NotThrowAsync();
-            Constants.CompareFields<BetsDto>(bets, getBet).Should().BeTrue(because: "Bet Entities after create and get should be the same");
-            Constants.CompareFields<BetQuoteDto>(betQuote, getBetQuote).Should().BeTrue(because: "Bet Quote Entities after create and get should be the same");
+            bets.Should().BeEquivalentTo(getBet, because: "Bet Entities after create and get should be the same");
+            betQuote.Should().BeEquivalentTo(getBetQuote, because: "Bet Quote Entities after create and get should be the same");
         }
 
 
         [Fact]
-        public async Task CreateFullBetAndUpdate()
+        [TestPriority(3)]
+        public async Task UpdateFullBetById()
         {
-            BetRequestDto fullBet = await CreateFullBetAsync();
+            BetRequestDto fullBet = _sharedFixture.fullBet;
             BetsDto initialBet = fullBet.bet;
             BetQuoteDto initialBetQuote = fullBet.betQuote;
 
-            IEnumerable<BetableEntityDto> entities = await _entityService.GetAllAsync();
+            IEnumerable<BetableEntityDto> entities = _sharedFixture.entities;
             int noElements = entities.Count();
             BetQuoteDto updatedBetQuote = null;
             BetsDto updatedBet = null;
@@ -131,15 +137,16 @@ namespace UnitTesting.Bets
 
             await act.Should().NotThrowAsync();
             initialBet.Id.Should().Be(updatedBet.Id);
-            Constants.CompareFields<UpdateBetsDto>(updateFieldBet, mappedUpdatedBet).Should().BeTrue(because: "After update, entity should change values from fields");
+            updateFieldBet.Should().BeEquivalentTo(mappedUpdatedBet, because: "After update, entity should change values from fields");
             initialBetQuote.Id.Should().Be(updatedBetQuote.Id);
-            Constants.CompareFields<UpdateBetQuotesDto>(mappedUpdatedBetQuotes, updateFiledBetQuotes).Should().BeTrue(because: "After update, entity should change values from fields");
+            mappedUpdatedBetQuotes.Should().BeEquivalentTo(updateFiledBetQuotes, because: "After update, entity should change values from fields");
         }
 
         [Fact]
-        public async Task CreateFullBetAndDeleteIt()
+        [TestPriority(4)]
+        public async Task DeleteFullBetById()
         {
-            BetRequestDto fullBet = await CreateFullBetAsync();
+            BetRequestDto fullBet = _sharedFixture.fullBet;
             BetsDto bet = fullBet.bet;
             BetQuoteDto betQuote = fullBet.betQuote;
 
@@ -162,8 +169,28 @@ namespace UnitTesting.Bets
                 await _betsQuoteService.GetByIdAsync(betQuote.Id);
             };
             await deleteBetQuote.Should().ThrowAsync<NotFoundException>();
-
         }
 
+        [Fact]
+        [TestPriority(5)]
+        public async Task GetAllBets()
+        {
+            Action act = () =>
+            {
+                _sharedFixture.bets = _betsService.GetAll().ToList();
+            };
+            act.Should().NotThrow();
+        }
+
+        [Fact]
+        [TestPriority(6)]
+        public async Task GetAllQuotes()
+        {
+            Action act = () =>
+            {
+                _sharedFixture.quotes = _betsQuoteService.GetAll().ToList();
+            };
+            act.Should().NotThrow();
+        }
     }
 }
