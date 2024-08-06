@@ -39,6 +39,5 @@ namespace DataAccess
                 .Property(quote => quote.QuoteX)
                 .HasPrecision(5, 2);
         }
-
     }
 }
