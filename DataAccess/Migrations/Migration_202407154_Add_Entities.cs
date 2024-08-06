@@ -7,6 +7,7 @@ namespace DataAccess.Migrations
     {
         public override void Up()
         {
+            Console.WriteLine("O face vere");
             Create.Table("BetableEntity")
                 .WithColumn("Id").AsGuid().PrimaryKey().WithDefault(SystemMethods.NewGuid)
                 .WithColumn("Name").AsString(255);

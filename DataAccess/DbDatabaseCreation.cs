@@ -15,9 +15,9 @@ namespace DataAccess
 
         }
 
-        private static DbContextOptions<DBContext> GetOptions(string connectionString)
+        private static DbContextOptions<DbDatabaseCreation> GetOptions(string connectionString)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<DBContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<DbDatabaseCreation>();
             optionsBuilder.UseSqlServer(connectionString);
             return optionsBuilder.Options;
         }
