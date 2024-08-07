@@ -2,7 +2,7 @@
 using Domain.Dto.BetRequest;
 using Domain.Dto.PlacedBet;
 using Domain.Entities;
-using UnitTesting.SetupUnitTests;
+using UnitTesting.SetupTests;
 
 namespace UnitTesting.BetsUnitTests
 {

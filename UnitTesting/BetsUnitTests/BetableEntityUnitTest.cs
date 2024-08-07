@@ -5,7 +5,6 @@ using Domain.Dto.BetableEntity;
 using Domain.ErrorEntities;
 using Microsoft.Extensions.DependencyInjection;
 using UnitTesting.Scheduler;
-using UnitTesting.SetupUnitTests;
 
 namespace UnitTesting.BetsUnitTests
 {
@@ -38,7 +37,6 @@ namespace UnitTesting.BetsUnitTests
             betableEntityDto.Should().NotBeNull("Entity should be created successfully");
             Guid betableId = betableEntityDto.Id;
             betableId.Should().NotBe(Guid.Empty, because: "Returned entity has id empty");
-            _output.WriteLine($"{betableEntityDto.Id}");
             _sharedFixture.createdBetableEntity = betableEntityDto;
         }
 

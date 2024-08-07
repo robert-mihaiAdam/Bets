@@ -6,7 +6,7 @@ using Services;
 using Services.Interfaces;
 using System.Text;
 using UnitTesting.Helpers;
-using UnitTesting.SetupUnitTests;
+using UnitTesting.SetupTests;
 using Xunit.Abstractions;
 
 namespace UnitTesting.BetsUnitTests

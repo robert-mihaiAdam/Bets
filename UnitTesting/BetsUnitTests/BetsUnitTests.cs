@@ -8,7 +8,7 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Interfaces;
 using UnitTesting.Helpers;
-using UnitTesting.SetupUnitTests;
+using UnitTesting.SetupTests;
 using Xunit.Abstractions;
 using UnitTesting.Scheduler;
 

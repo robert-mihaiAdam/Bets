@@ -5,7 +5,7 @@ using Services.Interfaces;
 using Services;
 using Domain;
 
-namespace UnitTesting.SetupUnitTests
+namespace UnitTesting.SetupTests
 {
     public class DependencyInjectionFixture
     {
