@@ -11,6 +11,6 @@ namespace Domain.Dto.PlacedBet
 
         [Required]
         [Range(1.00, 1000.00, ErrorMessage = "BetPrice must be a positive value and not higher than 1000.00.")]
-        public long BetPrice { get; set; }
+        public decimal BetPrice { get; set; }
     }
 }

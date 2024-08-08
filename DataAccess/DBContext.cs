@@ -7,7 +7,7 @@ namespace DataAccess
     {
         public DbSet<Bets> Bets { get; set; }
         public DbSet<BetQuotes> BetQuotes { get; set; }
-        public DbSet<BetableEntity> BetableEntity { get; set; }
+        public virtual DbSet<BetableEntity> BetableEntity { get; set; }
         public DbSet<PlacedBets> PlacedBets { get; set; }
 
         public DBContext(DbContextOptions<DBContext> options) : base(options)
